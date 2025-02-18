@@ -1,11 +1,3 @@
-export interface userData {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  image: string;
-}
-
 export interface loginForm {
   email: string;
   password: string;
@@ -13,7 +5,7 @@ export interface loginForm {
 
 export interface loginResponse {
   success: boolean;
-  user: userData[];
+  user: userDataProps;
   token: string;
   message: string;
 }
@@ -22,6 +14,7 @@ export interface userDataProps {
   id: string;
   email: string;
   name: string;
+  password: string;
   role: string;
   profileImage: string;
   phone: string;

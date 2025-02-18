@@ -11,14 +11,17 @@ import { loginFormSchema, loginFormData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { Form } from "./ui/form";
-import { useContext, useState, useTransition } from "react";
+import { useContext, useState } from "react";
 import { loginForm, loginResponse } from "../lib/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const [ispending, setIsPending] = useState(false);
-  const { backendUrl } = useContext(AppContext);
+  const { backendUrl, setUserData, setToken } = useContext(AppContext);
+  const navigate = useNavigate();
   const form = useForm<loginFormData>({
     resolver: zodResolver(loginFormSchema),
     mode: "onChange",
@@ -41,11 +44,40 @@ const LoginForm = () => {
         loginPayload
       );
 
-      if(data.success) {
-        console.log(data)
-        
+      if (data.success) {
+        console.log(data);
+        setToken(data.token);
+        setUserData(data.user);
+        localStorage.setItem("token", data.token);
+
+        if (data.user.role === "ADMIN") {
+          navigate("/admin/dashboard");
+        } else if (data.user.role === "USER") {
+          navigate("/user/dashboard");
+        } else if (data.user.role === "SERVICE_PROVIDER") {
+          navigate("/service-provider/dashboard");
+        } else if (data.user.role === "VENDOR") {
+          navigate("/vendor/dashboard");
+        } else {
+          navigate("/");
+        }
+      } else {
+        toast.error(data.message || "error");
       }
-    } catch (error) {}
+    } catch (error) {
+      //error handling
+      if (error instanceof AxiosError && error.response) {
+        //400 / 401 or 500 error
+        toast.error(error.response.data.message);
+      } else if (error instanceof Error) {
+        //unexpected error
+        toast.error(error.message || "An error occured while logging");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
