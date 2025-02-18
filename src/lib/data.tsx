@@ -67,3 +67,36 @@ export const testimonials = [
     image: "https://i.pravatar.cc/150?img=1",
   },
 ];
+
+export const faqs = [
+  {
+    question: "What is the Smart Vehicle Management System?",
+    answer:
+      "The Smart Vehicle Management System helps manage vehicle services, parts inventory, and track vehicles in real time. It allows users to book services, track their car breakdowns, and connect with nearby service providers for immediate assistance.",
+  },
+  {
+    question: "How can I book a service for my vehicle?",
+    answer:
+      "You can book a service through the app or website by selecting the type of service, scheduling an appointment, and choosing a service provider.",
+  },
+  {
+    question: "Can I track my vehicle breakdown in real-time?",
+    answer:
+      "Yes, the system allows you to track nearby service providers in real-time if your vehicle breaks down. You can send your live location for immediate assistance.",
+  },
+  {
+    question: "How can I buy car parts?",
+    answer:
+      "You can browse and purchase car parts from the vendor section of the system. Payments can be made via wallet, credit card, or other supported payment methods.",
+  },
+  {
+    question: "Is the system available for multiple vehicle types?",
+    answer:
+      "Yes, the system supports a variety of vehicle types, including cars, motorcycles, and trucks, with tailored services for each type.",
+  },
+  {
+    question: "How secure are the payment methods?",
+    answer:
+      "All payment methods, including wallet and credit card transactions, are secured using advanced encryption to protect your data and transactions.",
+  },
+];
