@@ -1,12 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormInput } from "./Form-Input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { loginFormSchema, loginFormData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
@@ -81,7 +75,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Card>
+    <div>
       <CardHeader className="text-center">
         <CardTitle className="text-3xl">Login Form</CardTitle>
         <CardDescription>
@@ -111,14 +105,13 @@ const LoginForm = () => {
                 required
               />
             </div>
-
             <Button className="w-full" type="submit">
               {ispending ? "processing..." : "Login"}
             </Button>
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </div>
   );
 };
 
