@@ -7,7 +7,7 @@ import Testimonials from "../components/Testimonials";
 
 const Home = () => {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="mx-4 md:mx-16 px-4 py-16">
       <Hero />
       <About />
       <Service />
