@@ -1,6 +1,6 @@
 import { Car, CreditCard, MapPin, Wrench } from "lucide-react";
 
-const services = [
+export const services = [
   {
     name: "Car Parts from Trusted Vendors",
     icon: <Wrench className="w-10 h-10 text-indigo-700" />,
