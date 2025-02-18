@@ -11,8 +11,12 @@ import { loginFormSchema, loginFormData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { Form } from "./ui/form";
+import { useTransition } from "react";
+import { loginForm } from "../lib/types";
+import axios from "axios";
 
 const LoginForm = () => {
+  const [ispending, startTransition] = useTransition();
   const form = useForm<loginFormData>({
     resolver: zodResolver(loginFormSchema),
     mode: "onChange",
@@ -22,8 +26,17 @@ const LoginForm = () => {
     },
   });
 
-  const submit: SubmitHandler<loginFormData> = (data) => {
-    console.log(data);
+  const submit: SubmitHandler<loginFormData> = async (data) => {
+    startTransition(() => {
+      try {
+        const loginPayload: loginForm = {
+          email: data.email,
+          password: data.password,
+        };
+
+        const { data } = await axios.post();
+      } catch (error) {}
+    });
   };
 
   return (
@@ -44,6 +57,7 @@ const LoginForm = () => {
                 label="Email"
                 placeholder="Email"
                 type="text"
+                isPending={ispending}
                 required
               />
               <FormInput
@@ -52,12 +66,13 @@ const LoginForm = () => {
                 label="Password"
                 placeholder="********"
                 type="password"
+                isPending={ispending}
                 required
               />
             </div>
 
             <Button className="w-full" type="submit">
-              Login
+              {ispending ? "processing..." : "Login"}
             </Button>
           </form>
         </Form>
