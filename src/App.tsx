@@ -8,7 +8,6 @@ const App = () => {
   return (
     <div>
       <Navbar />
-
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
