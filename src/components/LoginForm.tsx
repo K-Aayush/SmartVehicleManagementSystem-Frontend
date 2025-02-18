@@ -11,12 +11,14 @@ import { loginFormSchema, loginFormData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { Form } from "./ui/form";
-import { useTransition } from "react";
-import { loginForm } from "../lib/types";
+import { useContext, useState, useTransition } from "react";
+import { loginForm, loginResponse } from "../lib/types";
 import axios from "axios";
+import { AppContext } from "../context/AppContext";
 
 const LoginForm = () => {
-  const [ispending, startTransition] = useTransition();
+  const [ispending, setIsPending] = useState(false);
+  const { backendUrl } = useContext(AppContext);
   const form = useForm<loginFormData>({
     resolver: zodResolver(loginFormSchema),
     mode: "onChange",
@@ -26,17 +28,24 @@ const LoginForm = () => {
     },
   });
 
-  const submit: SubmitHandler<loginFormData> = async (data) => {
-    startTransition(() => {
-      try {
-        const loginPayload: loginForm = {
-          email: data.email,
-          password: data.password,
-        };
+  const submit: SubmitHandler<loginFormData> = async (formdata) => {
+    setIsPending(true);
+    try {
+      const loginPayload: loginForm = {
+        email: formdata.email,
+        password: formdata.password,
+      };
 
-        const { data } = await axios.post();
-      } catch (error) {}
-    });
+      const { data } = await axios.post<loginResponse>(
+        backendUrl + "/api/auth/login",
+        loginPayload
+      );
+
+      if(data.success) {
+        console.log(data)
+        
+      }
+    } catch (error) {}
   };
 
   return (

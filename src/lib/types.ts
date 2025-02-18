@@ -17,3 +17,12 @@ export interface loginResponse {
   token: string;
   message: string;
 }
+
+export interface userDataProps {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  profileImage: string;
+  phone: string;
+}
