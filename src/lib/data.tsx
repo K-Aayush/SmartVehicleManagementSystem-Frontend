@@ -36,3 +36,34 @@ export const banner = [
     number: "100+",
   },
 ];
+
+export const testimonials = [
+  {
+    name: "Ravi Kumar",
+    role: "Vehicle Owner",
+    content:
+      "This system helped me find a trusted mechanic during a roadside emergency. The live tracking and instant booking features are a lifesaver!",
+    image: "https://i.pravatar.cc/150?img=6",
+  },
+  {
+    name: "Sita Rai",
+    role: "Vehicle Owner",
+    content:
+      "The service booking feature is amazing. I can now easily get my car serviced by certified mechanics, and the payment options are seamless!",
+    image: "https://i.pravatar.cc/150?img=5",
+  },
+  {
+    name: "Deepak Sharma",
+    role: "Service Provider (Mechanic)",
+    content:
+      "Being a part of this platform has expanded my business. I can now reach more customers and provide timely assistance to car owners.",
+    image: "https://i.pravatar.cc/150?img=7",
+  },
+  {
+    name: "Manoj Pandey",
+    role: "Vendor (Car Parts Supplier)",
+    content:
+      "This system allows me to supply car parts efficiently to mechanics and vehicle owners. It's a great platform for vendors to reach customers quickly.",
+    image: "https://i.pravatar.cc/150?img=1",
+  },
+];
