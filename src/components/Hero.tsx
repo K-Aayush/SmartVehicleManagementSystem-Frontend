@@ -68,7 +68,7 @@ const HeroSection = () => {
       </div>
 
       {/* Right: Poster */}
-      <div className="lg:w-1/2 flex justify-center">
+      <div className="lg:w-1/2 lg:flex hidden justify-center">
         <div className="relative w-full aspect-square max-w-lg flex items-center">
           <img
             src={carService}

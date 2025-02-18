@@ -4,7 +4,7 @@ import vehicleService from "../assets/vehicleservice.png";
 const About = () => {
   return (
     <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-24">
-      <div className="lg:w-1/2">
+      <div className="lg:w-1/2 lg:flex hidden">
         <img
           src={vehicleService}
           alt="vehicleservice"
