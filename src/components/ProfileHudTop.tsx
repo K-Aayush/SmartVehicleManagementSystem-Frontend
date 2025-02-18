@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { ArrowDown, LogOut, UserRound } from "lucide-react";
+import { ArrowDown, LogIn, LogOut, UserRound } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function ProfileHudTop() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -40,6 +41,12 @@ export default function ProfileHudTop() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-48">
+          <Link to={"/login"}>
+            <DropdownMenuItem className="cursor-pointer">
+              <LogIn className="mr-2 size-4" />
+              Login
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem className="cursor-pointer">
             <CgProfile className="mr-2 size-4" />
             Profile
