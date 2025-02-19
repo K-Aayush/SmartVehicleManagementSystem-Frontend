@@ -14,7 +14,7 @@ export const AppContextProvider = ({
   const navigate = useNavigate();
 
   //loading state
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //get token
   const [token, setToken] = useState<string | null>(null);
@@ -86,7 +86,7 @@ export const AppContextProvider = ({
     setToken,
     userData,
     setUserData,
-    loading,
+    isLoading,
     setIsLoading,
     registerUser,
   };

@@ -6,112 +6,120 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { loginFormSchema, loginFormData } from "../../lib/validator";
+import { registerFormSchema } from "../../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { useContext, useState } from "react";
-import { authResponse, loginForm } from "../../lib/types";
-import axios, { AxiosError } from "axios";
+import { registerFormData } from "../../lib/types";
+import image from "../../assets/upload.png";
+
 import { AppContext } from "../../context/AppContext";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const UserRegisterForm = () => {
-  const [ispending, setIsPending] = useState(false);
-  const { backendUrl, setUserData, setToken } = useContext(AppContext);
-  const navigate = useNavigate();
-  const form = useForm<loginFormData>({
-    resolver: zodResolver(loginFormSchema),
+  const { isLoading, registerUser } = useContext(AppContext);
+  const [isTextDataSubmitted, setIsTextDataSubmitted] =
+    useState<boolean>(false);
+  const form = useForm<registerFormData>({
+    resolver: zodResolver(registerFormSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
+      name: "",
+      phone: "",
+      profileImage: "",
+      role: "USER",
     },
   });
-
-  const submit: SubmitHandler<loginFormData> = async (formdata) => {
-    setIsPending(true);
-    try {
-      const loginPayload: loginForm = {
-        email: formdata.email,
-        password: formdata.password,
-      };
-
-      const { data } = await axios.post<authResponse>(
-        backendUrl + "/api/auth/login",
-        loginPayload
-      );
-
-      if (data.success) {
-        console.log(data);
-        setToken(data.token);
-        setUserData(data.user);
-        localStorage.setItem("token", data.token);
-
-        if (data.user.role === "ADMIN") {
-          navigate("/admin/dashboard");
-        } else if (data.user.role === "USER") {
-          navigate("/user/dashboard");
-        } else if (data.user.role === "SERVICE_PROVIDER") {
-          navigate("/service-provider/dashboard");
-        } else if (data.user.role === "VENDOR") {
-          navigate("/vendor/dashboard");
-        } else {
-          navigate("/");
-        }
-      } else {
-        toast.error(data.message || "Something went wrong");
-      }
-    } catch (error) {
-      //error handling
-      if (error instanceof AxiosError && error.response) {
-        //400 / 401 or 500 error
-        toast.error(error.response.data.message);
-      } else if (error instanceof Error) {
-        //unexpected error
-        toast.error(error.message || "An error occured while logging");
-      } else {
-        toast.error("Something went wrong");
-      }
-    } finally {
-      setIsPending(false);
-    }
-  };
 
   return (
     <div>
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl">Login Form</CardTitle>
+        <CardTitle className="text-3xl">User Register Form</CardTitle>
         <CardDescription>
-          Welcome back! Login to your account by filling out the form below.
+          Register your account by filling out the form below, make sure the
+          data you enter is correct.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(submit)}>
-            <div className="space-y-4">
-              <FormInput
-                control={form.control}
-                name="email"
-                label="Email"
-                placeholder="Email"
-                type="text"
-                isPending={ispending}
-                required
-              />
-              <FormInput
-                control={form.control}
-                name="password"
-                label="Password"
-                placeholder="********"
-                type="password"
-                isPending={ispending}
-                required
-              />
-            </div>
+          <form className="space-y-6" onSubmit={form.handleSubmit()}>
+            {isTextDataSubmitted ? (
+              <>
+                <div className="flex flex-col my-10">
+                  <div className="flex items-center gap-4">
+                    <label htmlFor="profileImage">
+                      <img
+                        src={image}
+                        alt="image"
+                        className="flex w-16 rounded-full cursor-pointer dark:bg-gray-800"
+                      />
+                      <input
+                        {...form.register("profileImage")}
+                        type="file"
+                        id="profileImage"
+                        hidden={true}
+                      />
+                    </label>
+                    <p>Upload Profile Image</p>
+                  </div>
+                  {form.formState.errors.profileImage &&
+                    typeof form.formState.errors.profileImage.message ===
+                      "string" && (
+                      <p className="text-xs text-red-500">
+                        {form.formState.errors.profileImage.message}
+                      </p>
+                    )}
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4">
+                <FormInput
+                  control={form.control}
+                  name="name"
+                  label="Full Name"
+                  placeholder="enter your full name"
+                  type="text"
+                  isPending={isLoading}
+                  required
+                />
+                <FormInput
+                  control={form.control}
+                  name="phone"
+                  label="Phone Number"
+                  placeholder="enter your phone number"
+                  type="text"
+                  isPending={isLoading}
+                  required
+                />
+                <FormInput
+                  control={form.control}
+                  name="email"
+                  label="Email"
+                  placeholder="Email"
+                  type="text"
+                  isPending={isLoading}
+                  required
+                />
+                <FormInput
+                  control={form.control}
+                  name="password"
+                  label="Password"
+                  placeholder="********"
+                  type="password"
+                  isPending={isLoading}
+                  required
+                />
+              </div>
+            )}
+
             <Button className="w-full" type="submit">
-              {ispending ? "processing..." : "Login"}
+              {!isTextDataSubmitted
+                ? "Next"
+                : isLoading
+                ? "processing..."
+                : "Register"}
             </Button>
           </form>
         </Form>

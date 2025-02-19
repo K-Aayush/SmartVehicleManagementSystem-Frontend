@@ -8,7 +8,7 @@ interface AppContextType {
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   userData: userDataProps | null;
   setUserData: React.Dispatch<React.SetStateAction<userDataProps | null>>;
-  loading: boolean;
+  isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   registerUser: (userData: registerFormData) => void;
 }
@@ -19,7 +19,7 @@ const defaultValue: AppContextType = {
   setToken: () => {},
   userData: null,
   setUserData: () => {},
-  loading: false,
+  isLoading: false,
   setIsLoading: () => {},
   registerUser: () => {},
 };
