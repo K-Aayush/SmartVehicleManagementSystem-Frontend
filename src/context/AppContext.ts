@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { userDataProps } from "../lib/types";
+import { registerFormData, userDataProps } from "../lib/types";
 
 //Type of AppContext
 interface AppContextType {
@@ -8,6 +8,9 @@ interface AppContextType {
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   userData: userDataProps | null;
   setUserData: React.Dispatch<React.SetStateAction<userDataProps | null>>;
+  loading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  registerUser: (userData: registerFormData) => void;
 }
 
 const defaultValue: AppContextType = {
@@ -16,6 +19,9 @@ const defaultValue: AppContextType = {
   setToken: () => {},
   userData: null,
   setUserData: () => {},
+  loading: false,
+  setIsLoading: () => {},
+  registerUser: () => {},
 };
 
 export const AppContext = createContext<AppContextType>(defaultValue);

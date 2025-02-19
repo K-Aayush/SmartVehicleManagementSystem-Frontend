@@ -3,14 +3,14 @@ export interface loginForm {
   password: string;
 }
 
-export interface loginResponse {
+export interface authResponse {
   success: boolean;
   user: userDataProps;
   token: string;
   message: string;
 }
 
-export interface registerForm {
+export interface registerFormData {
   email: string;
   password: string;
   name: string;

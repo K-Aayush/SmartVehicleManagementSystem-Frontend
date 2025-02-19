@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
 import { Form } from "./ui/form";
 import { useContext, useState } from "react";
-import { loginForm, loginResponse } from "../lib/types";
+import { authResponse, loginForm } from "../lib/types";
 import axios, { AxiosError } from "axios";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const LoginForm = () => {
         password: formdata.password,
       };
 
-      const { data } = await axios.post<loginResponse>(
+      const { data } = await axios.post<authResponse>(
         backendUrl + "/api/auth/login",
         loginPayload
       );
@@ -56,7 +56,7 @@ const LoginForm = () => {
           navigate("/");
         }
       } else {
-        toast.error(data.message || "error");
+        toast.error(data.message || "Something went wrong");
       }
     } catch (error) {
       //error handling
