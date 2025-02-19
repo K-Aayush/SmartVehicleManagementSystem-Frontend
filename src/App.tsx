@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Toaster } from "sonner";
 import Login from "./pages/Login";
-import Register from "./pages/register";
+import Register from "./pages/Register";
 import RegisterVendor from "./pages/RegisterVendor";
 import RegisterUser from "./pages/RegisterUser";
 import RegisterServiceProvider from "./pages/RegisterServiceProvider";

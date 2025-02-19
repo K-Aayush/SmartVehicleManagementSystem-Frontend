@@ -10,12 +10,23 @@ export interface loginResponse {
   message: string;
 }
 
+export interface registerForm {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+  profileImage?: string;
+  phone: string;
+  companyName?: string;
+}
+
 export interface userDataProps {
   id: string;
   email: string;
   name: string;
   password: string;
   role: string;
-  profileImage: string;
+  profileImage?: string;
   phone: string;
+  companyName?: string;
 }

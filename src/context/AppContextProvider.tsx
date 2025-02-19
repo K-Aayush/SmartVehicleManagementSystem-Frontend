@@ -13,6 +13,7 @@ export const AppContextProvider = ({
   const [token, setToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<userDataProps | null>(null);
 
+
   const value = {
     backendUrl,
     token,
