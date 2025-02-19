@@ -3,9 +3,9 @@ import { FaInstagram, FaTwitter, FaFacebook } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <div className="container px-4 md:px-20 mx-auto flex items-center justify-between gap-4 py-3 mt-20 dark:border border">
+    <div className="flex items-center justify-between gap-4 px-4 py-3 mx-auto mt-20 border md:px-20 dark:border">
       <img src={logo} alt="logo" width={200} height={200} />
-      <p className="flex-1 border-l border-gray-500 pl-4 text-sm text-gray-600 dark:text-gray-300 max-sm:hidden">
+      <p className="flex-1 pl-4 text-sm text-gray-600 border-l border-gray-500 dark:text-gray-300 max-sm:hidden">
         Copyright ©2025 | All rights reserved
       </p>
       <div className="flex items-center gap-3">
