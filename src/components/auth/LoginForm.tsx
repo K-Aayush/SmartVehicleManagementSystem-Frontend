@@ -1,14 +1,19 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { FormInput } from "./Form-Input";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { loginFormSchema, loginFormData } from "../lib/validator";
+import { FormInput } from "../Form-Input";
+import {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { loginFormSchema, loginFormData } from "../../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "./ui/button";
-import { Form } from "./ui/form";
+import { Button } from "../ui/button";
+import { Form } from "../ui/form";
 import { useContext, useState } from "react";
-import { authResponse, loginForm } from "../lib/types";
+import { authResponse, loginForm } from "../../lib/types";
 import axios, { AxiosError } from "axios";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 

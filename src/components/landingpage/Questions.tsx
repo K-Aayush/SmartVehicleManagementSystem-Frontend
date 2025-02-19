@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { faqs } from "../lib/data";
+import { faqs } from "../../lib/data";
 
 const Questions = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -11,10 +11,10 @@ const Questions = () => {
   return (
     <div className="flex flex-col">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-4xl font-semibold text-center pb-6 gradient-title">
+        <h2 className="pb-6 text-4xl font-semibold text-center gradient-title">
           Frequently Asked Questions
         </h2>
-        <p className="text-lg text-center text-gray-600 dark:text-gray-300 mb-10">
+        <p className="mb-10 text-lg text-center text-gray-600 dark:text-gray-300">
           We've compiled a list of the most common questions about our Smart
           Vehicle Management System. If you have more questions, feel free to
           reach out.
@@ -24,10 +24,10 @@ const Questions = () => {
         {faqs.map((item, index) => (
           <div key={index} className="border rounded-md shadow-md">
             <button
-              className="w-full rounded-t-md text-left p-4 focus:outline-none bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-transform ease-in-out"
+              className="w-full p-4 text-left transition-transform ease-in-out bg-gray-100 rounded-t-md focus:outline-none dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => toggleQuestion(index)}
             >
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <span className="font-medium">{item.question}</span>
                 <span className="text-xl">
                   {activeIndex === index ? "−" : "+"}
@@ -36,7 +36,7 @@ const Questions = () => {
             </button>
 
             {activeIndex === index && (
-              <div className="p-4 rounded-b-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border-t">
+              <div className="p-4 text-gray-700 bg-white border-t rounded-b-md dark:text-gray-300 dark:bg-gray-900">
                 {item.answer}
               </div>
             )}
