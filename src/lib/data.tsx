@@ -1,4 +1,31 @@
-import { Car, Check, CreditCard, MapPin, Users, Wrench } from "lucide-react";
+import {
+  Briefcase,
+  Car,
+  Check,
+  CreditCard,
+  MapPin,
+  User,
+  Users,
+  Wrench,
+} from "lucide-react";
+
+export const registerType = [
+  {
+    name: "Register as a user",
+    icon: <User className="w-10 h-10 text-indigo-700" />,
+    link: "/register/user",
+  },
+  {
+    name: "Become a Seller",
+    icon: <Briefcase className="w-10 h-10 text-green-700" />,
+    link: "/register/vendor",
+  },
+  {
+    name: "Register as a mechanic",
+    icon: <Wrench className="w-10 h-10 text-gray-700" />,
+    link: "/register/service-provider",
+  },
+];
 
 export const services = [
   {

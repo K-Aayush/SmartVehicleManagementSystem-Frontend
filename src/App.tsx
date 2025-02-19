@@ -4,6 +4,10 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Toaster } from "sonner";
 import Login from "./pages/Login";
+import Register from "./pages/register";
+import RegisterVendor from "./pages/RegisterVendor";
+import RegisterUser from "./pages/RegisterUser";
+import RegisterServiceProvider from "./pages/RegisterServiceProvider";
 
 const App = () => {
   return (
@@ -13,6 +17,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/register/vendor" element={<RegisterVendor />} />
+        <Route path="/register/user" element={<RegisterUser />} />
+        <Route
+          path="/register/service-provider"
+          element={<RegisterServiceProvider />}
+        />
       </Routes>
       <Footer />
     </div>
