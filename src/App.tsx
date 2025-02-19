@@ -3,11 +3,11 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Toaster } from "sonner";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import RegisterVendor from "./pages/RegisterVendor";
-import RegisterUser from "./pages/RegisterUser";
-import RegisterServiceProvider from "./pages/RegisterServiceProvider";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import RegisterVendor from "./pages/auth/RegisterVendor";
+import RegisterUser from "./pages/auth/RegisterUser";
+import RegisterServiceProvider from "./pages/auth/RegisterServiceProvider";
 
 const App = () => {
   return (

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent } from "../components/ui/card";
-import { registerType } from "../lib/data";
+import { Card, CardContent } from "../../components/ui/card";
+import { registerType } from "../../lib/data";
 
 const Register = () => {
   return (
