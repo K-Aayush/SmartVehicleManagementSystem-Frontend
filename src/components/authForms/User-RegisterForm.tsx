@@ -142,7 +142,7 @@ const UserRegisterForm = () => {
                       <img
                         src={previewImage || image}
                         alt="image"
-                        className="w-16 rounded-full cursor-pointer"
+                        className="object-cover w-16 h-16 rounded-full cursor-pointer"
                       />
                       <input
                         {...form.register("profileImage")}
