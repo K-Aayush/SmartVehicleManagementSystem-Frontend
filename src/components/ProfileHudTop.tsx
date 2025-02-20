@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 export default function ProfileHudTop() {
-  const { logout } = useContext(AppContext);
+  const { token, logout } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -45,23 +45,31 @@ export default function ProfileHudTop() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-48">
-          <Link to={"/login"}>
-            <DropdownMenuItem className="cursor-pointer">
-              <LogIn className="mr-2 size-4" />
-              Login
-            </DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem className="cursor-pointer">
-            <CgProfile className="mr-2 size-4" />
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-red-600 cursor-pointer dark:text-red-400"
-          >
-            <LogOut className="mr-2 size-4" />
-            <span>Logout</span>
-          </DropdownMenuItem>
+          {!token ? (
+            <>
+              {" "}
+              <Link to={"/login"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <LogIn className="mr-2 size-4" />
+                  Login
+                </DropdownMenuItem>
+              </Link>
+            </>
+          ) : (
+            <>
+              <DropdownMenuItem className="cursor-pointer">
+                <CgProfile className="mr-2 size-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-600 cursor-pointer dark:text-red-400"
+              >
+                <LogOut className="mr-2 size-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
