@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { services } from "../../lib/data";
-import { ArrowRight } from "lucide-react";
 
 const Service = () => {
   return (
@@ -16,11 +14,6 @@ const Service = () => {
           services, emergency assistance, and secure payment options, all in one
           platform.
         </p>
-        <Link to="/">
-          <button className="flex items-center px-3 py-4 mb-8 text-xl text-white bg-indigo-700 rounded-lg hover:bg-indigo-600">
-            Get Started <ArrowRight className="w-5 h-5 ml-2" />
-          </button>
-        </Link>
       </div>
 
       {/* Right side */}

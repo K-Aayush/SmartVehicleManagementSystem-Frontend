@@ -18,7 +18,7 @@ const HeroSection = () => {
           with just a few clicks. Enjoy quality service and convenience with our
           smart management system.
         </p>
-        <Link to="/services">
+        <Link to="/login">
           <button className="flex items-center px-5 py-4 mb-8 text-lg text-white bg-indigo-700 rounded-lg hover:bg-indigo-600">
             Get Started <ArrowRight className="w-5 h-5 ml-2" />
           </button>

@@ -3,10 +3,20 @@ export interface loginForm {
   password: string;
 }
 
+export interface roles {
+  role: "USER" | "VENDOR" | "SERVICE_PROVIDER" | "ADMIN";
+}
+
 export interface authResponse {
   success: boolean;
   user: userDataProps;
   token: string;
+  message: string;
+}
+
+export interface tokenCheck {
+  success: boolean;
+  user: userDataProps;
   message: string;
 }
 
