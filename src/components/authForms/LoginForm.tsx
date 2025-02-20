@@ -48,6 +48,7 @@ const LoginForm = () => {
         setToken(data.token);
         setUserData(data.user);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.user.role);
 
         if (data.user.role === "ADMIN") {
           navigate("/admin/dashboard");

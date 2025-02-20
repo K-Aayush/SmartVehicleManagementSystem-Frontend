@@ -16,17 +16,15 @@ import { toast } from "sonner";
 
 export default function ProfileHudTop() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { setToken } = useContext(AppContext);
+  const { logout } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
-
-    setToken(null);
-    localStorage.removeItem("token");
-    toast.success("Logged Out successfully");
+    toast.success("Loggingout...");
 
     setTimeout(() => {
+      logout();
       setIsLoggingOut(false);
       navigate("/");
     }, 500);

@@ -56,6 +56,7 @@ export const AppContextProvider = ({
         setUserData(data.user);
         setToken(data.token);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.user.role);
         toast.success(data.message);
 
         if (data.user.role === "USER") {
@@ -86,6 +87,16 @@ export const AppContextProvider = ({
     }
   };
 
+  //Logout function
+  const logout = () => {
+    setToken(null);
+    setUserData(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
+
   const value = {
     backendUrl,
     token,
@@ -95,6 +106,7 @@ export const AppContextProvider = ({
     isLoading,
     setIsLoading,
     registerUser,
+    logout,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
