@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { AppContext } from "./AppContext";
-import { authResponse, registerFormData, userDataProps } from "../lib/types";
+import { authResponse, userDataProps } from "../lib/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { registerFormData } from "../lib/validator";
 
 export const AppContextProvider = ({
   children,
@@ -28,11 +29,16 @@ export const AppContextProvider = ({
       const formData = new FormData();
 
       //append each formData
-      Object.entries(userData).forEach(([Key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(Key, value);
-        }
-      });
+      formData.append("name", userData.name);
+      formData.append("email", userData.email);
+      formData.append("password", userData.password);
+      formData.append("phone", userData.phone);
+      formData.append("role", userData.role);
+      formData.append("profileImage", userData.profileImage);
+
+      if (userData.role === "VENDOR" && userData.companyName) {
+        formData.append("companyName", userData.companyName);
+      }
 
       //calling register api
       const { data } = await axios.post<authResponse>(

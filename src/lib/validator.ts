@@ -32,9 +32,12 @@ export const registerFormSchema = z
       ),
     name: z.string().min(3, "Name is required"),
     phone: z.string().min(3, "Phone number is required"),
-    role: z.string().min(1, "role is required"),
-    companyName: z.string().max(20, "company name cannot exceed 20 characters"),
-    image: z.string().optional(),
+    role: z.enum(["USER", "VENDOR", "SERVICE_PROVIDER"]).default("USER"),
+    companyName: z
+      .string()
+      .max(20, "company name cannot exceed 20 characters")
+      .optional(),
+    profileImage: z.any().optional().nullable(),
   })
   .refine(
     (data) => {

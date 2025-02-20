@@ -1,5 +1,6 @@
 import { createContext } from "react";
-import { registerFormData, userDataProps } from "../lib/types";
+import { userDataProps } from "../lib/types";
+import { registerFormData } from "../lib/validator";
 
 //Type of AppContext
 interface AppContextType {
