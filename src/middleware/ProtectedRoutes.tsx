@@ -1,26 +1,30 @@
 import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
+import { jwtDecode } from "jwt-decode";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole: "USER" | "VENDOR" | "SERVICE_PROVIDER" | "ADMIN";
 }
 
+interface DecodedToken {
+  id: string | null;
+  role: string | null;
+}
+
 const ProtectedRoutes = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { userRole, token, isLoading } = useContext(AppContext);
+  const { token, isLoading } = useContext(AppContext);
 
   if (isLoading) return <div>Loading...</div>;
 
-  console.log(token);
-
   if (!token) {
-    return <Navigate to={"/login"} replace />;
+    return <Navigate to={"/"} replace />;
   }
 
-  console.log("protected routes: " + userRole);
+  const decoded = jwtDecode<DecodedToken>(token);
 
-  if (userRole !== requiredRole) {
+  if (!decoded || decoded.role !== requiredRole) {
     return <Navigate to={"/"} replace />;
   }
 

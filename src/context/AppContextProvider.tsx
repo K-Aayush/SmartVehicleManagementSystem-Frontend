@@ -22,10 +22,6 @@ export const AppContextProvider = ({
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(
-    localStorage.getItem("role")
-  );
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +34,6 @@ export const AppContextProvider = ({
 
           if (data.success) {
             setUserData(data.user);
-            setUserRole(data.user.role);
           } else {
             toast.error(data.message);
             logout();
@@ -53,7 +48,7 @@ export const AppContextProvider = ({
     };
 
     fetchData();
-  }, [token]);
+  }, [token, backendUrl]);
 
   //registerform
   const registerUser = async (userData: registerFormData) => {
@@ -141,8 +136,6 @@ export const AppContextProvider = ({
     setIsLoading,
     registerUser,
     logout,
-    userRole,
-    setUserRole,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

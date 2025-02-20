@@ -9,25 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { toast } from "sonner";
 
 export default function ProfileHudTop() {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { logout } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
-    toast.success("Loggingout...");
+    logout();
 
-    setTimeout(() => {
-      logout();
-      setIsLoggingOut(false);
-      navigate("/");
-    }, 500);
+    navigate("/");
   };
 
   return (
@@ -65,10 +58,9 @@ export default function ProfileHudTop() {
           <DropdownMenuItem
             onClick={handleLogout}
             className="text-red-600 cursor-pointer dark:text-red-400"
-            disabled={isLoggingOut}
           >
             <LogOut className="mr-2 size-4" />
-            <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+            <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
