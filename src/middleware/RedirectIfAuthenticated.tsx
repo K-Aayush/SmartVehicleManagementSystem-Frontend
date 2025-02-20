@@ -17,28 +17,27 @@ const RedirectIfAuthenticated = ({
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!token) {
-    return <Navigate to={"/"} replace />;
-  }
+  if (!token) return children;
 
-  const decoded = jwtDecode<DecodedToken>(token);
+  try {
+    const decoded = jwtDecode<DecodedToken>(token);
 
-  if (decoded) {
     switch (decoded.role) {
       case "USER":
-        return <Navigate to={"/user/dashboard"} replace />;
+        return <Navigate to="/user/dashboard" replace />;
       case "VENDOR":
-        return <Navigate to={"/vendor/dashboard"} replace />;
+        return <Navigate to="/vendor/dashboard" replace />;
       case "SERVICE_PROVIDER":
-        return <Navigate to={"/service-provider/dashboard"} replace />;
+        return <Navigate to="/service-provider/dashboard" replace />;
       case "ADMIN":
-        return <Navigate to={"/admin/dashboard"} replace />;
+        return <Navigate to="/admin/dashboard" replace />;
       default:
-        return <Navigate to={"/"} replace />;
+        return <Navigate to="/" replace />;
     }
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return children;
   }
-
-  return children;
 };
 
 export default RedirectIfAuthenticated;

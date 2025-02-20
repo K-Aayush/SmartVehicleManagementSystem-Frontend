@@ -12,6 +12,7 @@ import ProtectedRoutes from "./middleware/ProtectedRoutes";
 import UserDashboard from "./pages/user/Dashboard";
 import ServiceProviderDashboard from "./pages/service-provider/Dashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
+import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
 
 const App = () => {
   return (
@@ -20,13 +21,46 @@ const App = () => {
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/register/vendor" element={<RegisterVendor />} />
-        <Route path="/register/user" element={<RegisterUser />} />
+
+        <Route
+          path="/login"
+          element={
+            <RedirectIfAuthenticated>
+              <Login />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <RedirectIfAuthenticated>
+              <Register />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route
+          path="/register/vendor"
+          element={
+            <RedirectIfAuthenticated>
+              <RegisterVendor />
+            </RedirectIfAuthenticated>
+          }
+        />
+        <Route
+          path="/register/user"
+          element={
+            <RedirectIfAuthenticated>
+              <RegisterUser />
+            </RedirectIfAuthenticated>
+          }
+        />
         <Route
           path="/register/service-provider"
-          element={<RegisterServiceProvider />}
+          element={
+            <RedirectIfAuthenticated>
+              <RegisterServiceProvider />
+            </RedirectIfAuthenticated>
+          }
         />
 
         <Route
