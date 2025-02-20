@@ -1,25 +1,30 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 interface ProtectedRouteProps {
+  children: React.ReactNode;
   requiredRole: "USER" | "VENDOR" | "SERVICE_PROVIDER" | "ADMIN";
 }
 
-const ProtectedRoutes = ({ requiredRole }: ProtectedRouteProps) => {
-  const { userData, token, isLoading } = useContext(AppContext);
+const ProtectedRoutes = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { userRole, token, isLoading } = useContext(AppContext);
 
   if (isLoading) return <div>Loading...</div>;
+
+  console.log(token);
 
   if (!token) {
     return <Navigate to={"/login"} replace />;
   }
 
-  if (userData?.role !== requiredRole) {
+  console.log("protected routes: " + userRole);
+
+  if (userRole !== requiredRole) {
     return <Navigate to={"/"} replace />;
   }
 
-  return <Outlet />;
+  return children;
 };
 
 export default ProtectedRoutes;

@@ -28,23 +28,34 @@ const App = () => {
           path="/register/service-provider"
           element={<RegisterServiceProvider />}
         />
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoutes allowedRoles={["USER"]} />}>
-          <Route path="/user/dashboard" element={<UserDashboard />} />
-        </Route>
-
-        <Route element={<ProtectedRoutes allowedRoles={["VENDOR"]} />}>
-          <Route path="/vendor/dashboard" element={<VendorDashboard />} />
-        </Route>
 
         <Route
-          element={<ProtectedRoutes allowedRoles={["SERVICE_PROVIDER"]} />}
-        >
-          <Route
-            path="/service-provider/dashboard"
-            element={<ServiceProviderDashboard />}
-          />
-        </Route>
+          path="/user/dashboard"
+          element={
+            <ProtectedRoutes requiredRole="USER">
+              <UserDashboard />
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/vendor/dashboard"
+          element={
+            <ProtectedRoutes requiredRole="VENDOR">
+              <VendorDashboard />
+            </ProtectedRoutes>
+          }
+        />
+
+        <Route
+          path="/service-provider/dashboard"
+          element={
+            <ProtectedRoutes requiredRole="SERVICE_PROVIDER">
+              <ServiceProviderDashboard />
+            </ProtectedRoutes>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />

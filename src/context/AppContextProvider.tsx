@@ -18,40 +18,41 @@ export const AppContextProvider = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //get token
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
   const [userData, setUserData] = useState<userDataProps | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(
+    localStorage.getItem("role")
+  );
 
-  //fetching userdata if token exists
+
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        setIsLoading(true);
+    const fetchData = async () => {
+      if (token) {
         try {
           const { data } = await axios.get<tokenCheck>(
-            backendUrl + "/api/auth/me",
-            {
-              headers: {
-                Authorization: `bearer ${storedToken}`,
-              },
-            }
+            `${backendUrl}/api/auth/me`,
+            { headers: { Authorization: token } }
           );
 
           if (data.success) {
             setUserData(data.user);
-            setToken(storedToken);
+            setUserRole(data.user.role);
           } else {
+            toast.error(data.message);
             logout();
           }
         } catch (error) {
-          console.log(error);
+          console.error("User data fetch error:", error);
           logout();
         } finally {
           setIsLoading(false);
         }
       }
     };
-    checkAuthStatus();
+
+    fetchData();
   }, [token]);
 
   //registerform
@@ -140,6 +141,8 @@ export const AppContextProvider = ({
     setIsLoading,
     registerUser,
     logout,
+    userRole,
+    setUserRole,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
