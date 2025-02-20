@@ -3,18 +3,19 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
   requiredRole: "USER" | "VENDOR" | "SERVICE_PROVIDER" | "ADMIN";
 }
 
-const ProtectedRoutes = ({ allowedRoles }: { allowedRoles: string[] }) => {
-  const { userData, token } = useContext(AppContext);
+const ProtectedRoutes = ({ requiredRole }: ProtectedRouteProps) => {
+  const { userData, token, isLoading } = useContext(AppContext);
 
-  if (!token || !userData) {
+  if (isLoading) return <div>Loading...</div>;
+
+  if (!token) {
     return <Navigate to={"/login"} replace />;
   }
 
-  if (!allowedRoles.includes(userData.role)) {
+  if (userData?.role !== requiredRole) {
     return <Navigate to={"/"} replace />;
   }
 
