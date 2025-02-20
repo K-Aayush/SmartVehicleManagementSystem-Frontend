@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
-import { authResponse, userDataProps } from "../lib/types";
+import { authResponse, tokenCheck, userDataProps } from "../lib/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,39 @@ export const AppContextProvider = ({
   //get token
   const [token, setToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<userDataProps | null>(null);
+
+  //fetching userdata if token exists
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setIsLoading(true);
+        try {
+          const { data } = await axios.get<tokenCheck>(
+            backendUrl + "/api/auth/me",
+            {
+              headers: {
+                Authorization: `bearer ${storedToken}`,
+              },
+            }
+          );
+
+          if (data.success) {
+            setUserData(data.user);
+            setToken(storedToken);
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.log(error);
+          logout();
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+    checkAuthStatus();
+  }, [token]);
 
   //registerform
   const registerUser = async (userData: registerFormData) => {

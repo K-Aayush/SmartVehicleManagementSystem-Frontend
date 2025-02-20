@@ -10,6 +10,11 @@ export interface authResponse {
   message: string;
 }
 
+export interface tokenCheck {
+  success: boolean;
+  user: userDataProps;
+}
+
 export interface registerFormData {
   email: string;
   password: string;
