@@ -18,10 +18,21 @@ const App = () => {
   const location = useLocation();
 
   const hideNavbarRoutes = ["/login", "/register"];
+  const hideFooterRoutes = [
+    "/login",
+    "/register",
+    "/user",
+    "/vendor",
+    "/service-provider",
+  ];
 
-  const shouldHideNavbar = hideNavbarRoutes.some((path) => {
-    location.pathname.startsWith(path);
-  });
+  const shouldHideNavbar = hideNavbarRoutes.includes(
+    `/${location.pathname.split("/")[1]}`
+  );
+
+  const shouldHideFooter = hideFooterRoutes.includes(
+    `/${location.pathname.split("/")[1]}`
+  );
 
   return (
     <div>
@@ -100,7 +111,7 @@ const App = () => {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      <Footer />
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };
