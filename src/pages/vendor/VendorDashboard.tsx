@@ -9,39 +9,39 @@ const VendorDashboard = () => {
       <div className="flex items-start overflow-y-auto">
         {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
-          <ul className="flex flex-col items-start pt-5 text-gray-800">
+          <ul className="flex flex-col items-start pt-5 text-gray-800 dark:text-gray-300">
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-700 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/requiterDashboard/dashboard"}
+              to={"/vendor/dashboard"}
             >
               <LayoutDashboard />
               <p>Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-700 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
               to={"/requiterDashboard/add-service"}
             >
               <SquarePlus />
-              <p>Add Service</p>
+              <p>Add Product</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-700 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
               to={"/requiterDashboard/manage-service"}
             >
               <Home />
-              <p>Manage Services</p>
+              <p>Manage Product</p>
             </NavLink>
           </ul>
         </div>
