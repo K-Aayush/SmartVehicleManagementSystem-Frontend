@@ -19,7 +19,7 @@ const VendorDashboard = () => {
               to={"/vendor/dashboard"}
             >
               <LayoutDashboard />
-              <p>Dashboard</p>
+              <p>Vendor Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>

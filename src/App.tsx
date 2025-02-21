@@ -11,7 +11,7 @@ import RegisterServiceProvider from "./pages/auth/RegisterServiceProvider";
 import ProtectedRoutes from "./middleware/ProtectedRoutes";
 import UserDashboard from "./pages/user/Dashboard";
 import ServiceProviderDashboard from "./pages/service-provider/Dashboard";
-import VendorDashboard from "./pages/vendor/VendorDashboard";
+import VendorDashboard from "./pages/vendor/Dashboard";
 import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
 
 const App = () => {
