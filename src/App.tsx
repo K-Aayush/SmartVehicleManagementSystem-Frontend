@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -14,9 +14,12 @@ import ServiceProviderDashboard from "./pages/service-provider/Dashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
 
+
 const App = () => {
+  const location = useLocation();
   return (
     <div>
+
       <Navbar />
       <Toaster richColors duration={5000} />
       <Routes>
