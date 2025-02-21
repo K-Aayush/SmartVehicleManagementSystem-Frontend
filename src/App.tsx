@@ -14,13 +14,18 @@ import ServiceProviderDashboard from "./pages/service-provider/Dashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
 
-
 const App = () => {
   const location = useLocation();
+
+  const hideNavbarRoutes = ["/login", "/register"];
+
+  const shouldHideNavbar = hideNavbarRoutes.some((path) => {
+    location.pathname.startsWith(path);
+  });
+
   return (
     <div>
-
-      <Navbar />
+      {!shouldHideNavbar && <Navbar />}
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
