@@ -19,7 +19,7 @@ const ServiceProviderDashboard = () => {
               to={"/service-provider/dashboard"}
             >
               <LayoutDashboard />
-              <p>Service Provider Dashboard</p>
+              <p>Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
@@ -46,7 +46,7 @@ const ServiceProviderDashboard = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="pt-5 ml-5">
           <Outlet />
         </div>
       </div>

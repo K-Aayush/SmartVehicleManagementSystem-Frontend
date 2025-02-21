@@ -13,6 +13,9 @@ import UserDashboard from "./pages/user/Dashboard";
 import ServiceProviderDashboard from "./pages/service-provider/Dashboard";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
+import ServiceProviderDashboardPage from "./pages/service-provider/ServiceProviderDashboardPage";
+import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
+import UserDashboardPage from "./pages/user/UserDashboardPage";
 
 const App = () => {
   const location = useLocation();
@@ -89,7 +92,9 @@ const App = () => {
               <UserDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+          <Route path="" element={<UserDashboardPage />} />
+        </Route>
 
         <Route
           path="/vendor/dashboard"
@@ -98,7 +103,9 @@ const App = () => {
               <VendorDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+          <Route path="" element={<VendorDashboardPage />} />
+        </Route>
 
         <Route
           path="/service-provider/dashboard"
@@ -107,7 +114,9 @@ const App = () => {
               <ServiceProviderDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+          <Route path="" element={<ServiceProviderDashboardPage />} />
+        </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

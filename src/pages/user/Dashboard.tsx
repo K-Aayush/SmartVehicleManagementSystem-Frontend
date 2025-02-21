@@ -19,7 +19,7 @@ const UserDashboard = () => {
               to={"/user/dashboard"}
             >
               <LayoutDashboard />
-              <p>User Dashboard</p>
+              <p>Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
@@ -46,7 +46,7 @@ const UserDashboard = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="pt-5 ml-5">
           <Outlet />
         </div>
       </div>

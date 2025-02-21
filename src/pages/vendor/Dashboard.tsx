@@ -1,6 +1,4 @@
 import { Home, LayoutDashboard, SquarePlus } from "lucide-react";
-// import logo from "../assets/Logo.svg";
-
 import { NavLink, Outlet } from "react-router-dom";
 
 const VendorDashboard = () => {
@@ -19,7 +17,7 @@ const VendorDashboard = () => {
               to={"/vendor/dashboard"}
             >
               <LayoutDashboard />
-              <p>Vendor Dashboard</p>
+              <p>Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
@@ -46,7 +44,7 @@ const VendorDashboard = () => {
           </ul>
         </div>
 
-        <div>
+        <div className="pt-5 ml-5">
           <Outlet />
         </div>
       </div>
