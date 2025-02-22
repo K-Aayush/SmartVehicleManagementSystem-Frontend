@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import { addProductFormData, addProductSchema } from "../../lib/validator";
 import { Form } from "../ui/form";
 import image from "../../assets/add-image.png";
+import { useState } from "react";
 
 const AddProductForm = () => {
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const form = useForm<addProductFormData>({
     resolver: zodResolver(addProductSchema),
     mode: "onChange",
@@ -17,6 +19,31 @@ const AddProductForm = () => {
       imageUrl: [],
     },
   });
+
+  const handleImageChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+
+      // Generate previewImage
+      const previewUrl = URL.createObjectURL(file);
+
+      // Update the specific image preview based on the index
+      setPreviewImages((prev) => {
+        const newImages = [...prev];
+        newImages[index] = previewUrl;
+        return newImages;
+      });
+
+      // Set file for form validation (imageUrl expects an array of strings)
+      form.setValue("imageUrl", [...form.getValues("imageUrl"), previewUrl], {
+        shouldValidate: true,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -64,62 +91,22 @@ const AddProductForm = () => {
             </div>
             <label>Product Images</label>
             <div className="flex items-center gap-4">
-              <label htmlFor="profileImage">
-                <img
-                  src={image}
-                  alt="image"
-                  className="object-cover w-32 h-32 rounded-sm cursor-pointer"
-                />
-                <input
-                  {...form.register("imageUrl")}
-                  type="file"
-                  id="profileImage"
-                  hidden={true}
-                  onChange={""}
-                />
-              </label>
-              <label htmlFor="profileImage">
-                <img
-                  src={image}
-                  alt="image"
-                  className="object-cover w-32 h-32 rounded-sm cursor-pointer"
-                />
-                <input
-                  {...form.register("imageUrl")}
-                  type="file"
-                  id="profileImage"
-                  hidden={true}
-                  onChange={""}
-                />
-              </label>
-              <label htmlFor="profileImage">
-                <img
-                  src={image}
-                  alt="image"
-                  className="object-cover w-32 h-32 rounded-sm cursor-pointer"
-                />
-                <input
-                  {...form.register("imageUrl")}
-                  type="file"
-                  id="profileImage"
-                  hidden={true}
-                  onChange={""}
-                />
-              </label>
-              <label htmlFor="profileImage">
-                <img
-                  src={image}
-                  alt="image"
-                  className="object-cover w-32 h-32 rounded-sm cursor-pointer"
-                />
-                <input
-                  {...form.register("imageUrl")}
-                  type="file"
-                  id="profileImage"
-                  hidden={true}
-                  onChange={""}
-                />
-              </label>
+              {[...Array(4)].map((_, index) => (
+                <label key={index} htmlFor={`profileImage-${index}`}>
+                  <img
+                    src={previewImages[index] || image}
+                    alt="image"
+                    className="object-cover w-32 h-32 rounded-sm cursor-pointer"
+                  />
+                  <input
+                    {...form.register(`imageUrl.${index}`)}
+                    type="file"
+                    id={`profileImage-${index}`}
+                    hidden={true}
+                    onChange={(e) => handleImageChange(index, e)}
+                  />
+                </label>
+              ))}
             </div>
           </div>
         </Form>
