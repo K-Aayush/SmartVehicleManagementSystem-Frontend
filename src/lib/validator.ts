@@ -56,7 +56,13 @@ export const registerFormSchema = z
 export const addProductSchema = z.object({
   name: z.string().min(1, "Product Name is required"),
   category: z.string().min(1, "Product category is required"),
-  price: z.number().positive("price must be a positive Number"),
-  stock: z.number().int().min(0, "Stock must be a non negative Integer"),
+  price: z.preprocess(
+    (val) => Number(val),
+    z.number().positive("Price must be a positive number")
+  ),
+  stock: z.preprocess(
+    (val) => Number(val),
+    z.number().int().min(0, "Stock must be a non negative Integer")
+  ),
   imageUrl: z.array(z.string()).min(1, "At least one image is required"),
 });
