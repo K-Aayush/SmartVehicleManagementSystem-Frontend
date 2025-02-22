@@ -16,6 +16,7 @@ import RedirectIfAuthenticated from "./middleware/RedirectIfAuthenticated";
 import ServiceProviderDashboardPage from "./pages/service-provider/ServiceProviderDashboardPage";
 import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
 import UserDashboardPage from "./pages/user/UserDashboardPage";
+import AddProduct from "./pages/vendor/AddProduct";
 
 const App = () => {
   const location = useLocation();
@@ -97,14 +98,15 @@ const App = () => {
         </Route>
 
         <Route
-          path="/vendor/dashboard"
+          path="/vendor"
           element={
             <ProtectedRoutes requiredRole="VENDOR">
               <VendorDashboard />
             </ProtectedRoutes>
           }
         >
-          <Route path="" element={<VendorDashboardPage />} />
+          <Route path="dashboard" element={<VendorDashboardPage />} />
+          <Route path="addProduct" element={<AddProduct />} />
         </Route>
 
         <Route

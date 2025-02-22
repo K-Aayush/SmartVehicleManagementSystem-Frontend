@@ -25,7 +25,7 @@ const VendorDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/requiterDashboard/add-service"}
+              to={"/vendor/addProduct"}
             >
               <SquarePlus />
               <p>Add Product</p>
