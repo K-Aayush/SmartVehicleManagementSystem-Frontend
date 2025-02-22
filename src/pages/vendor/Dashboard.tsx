@@ -1,12 +1,10 @@
 import { Home, LayoutDashboard, SquarePlus } from "lucide-react";
-// import logo from "../assets/Logo.svg";
-
 import { NavLink, Outlet } from "react-router-dom";
 
-const ServiceProviderDashboard = () => {
+const VendorDashboard = () => {
   return (
-    <div className="min-h-screen">
-      <div className="flex items-start overflow-y-auto">
+    <div className="flex">
+      <div className="flex items-start w-full overflow-y-auto">
         {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
           <ul className="flex flex-col items-start pt-5 text-gray-800 dark:text-gray-300">
@@ -16,7 +14,7 @@ const ServiceProviderDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/service-provider/dashboard"}
+              to={"/vendor/dashboard"}
             >
               <LayoutDashboard />
               <p>Dashboard</p>
@@ -27,7 +25,7 @@ const ServiceProviderDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/service-provider/add-service"}
+              to={"/vendor/addProduct"}
             >
               <SquarePlus />
               <p>Add Product</p>
@@ -38,7 +36,7 @@ const ServiceProviderDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/service-provider/manage-service"}
+              to={"/requiterDashboard/manage-service"}
             >
               <Home />
               <p>Manage Product</p>
@@ -46,7 +44,7 @@ const ServiceProviderDashboard = () => {
           </ul>
         </div>
 
-        <div className="pt-5 ml-5">
+        <div className="flex-1 pt-5 ml-5">
           <Outlet />
         </div>
       </div>
@@ -54,4 +52,4 @@ const ServiceProviderDashboard = () => {
   );
 };
 
-export default ServiceProviderDashboard;
+export default VendorDashboard;

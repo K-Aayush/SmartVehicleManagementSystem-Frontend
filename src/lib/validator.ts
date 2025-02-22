@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export type loginFormData = z.infer<typeof loginFormSchema>;
 export type registerFormData = z.infer<typeof registerFormSchema>;
+export type addProductFormData = z.infer<typeof addProductSchema>;
 
 export const loginFormSchema = z.object({
   email: z.string({ required_error: "Email is required" }),
@@ -51,3 +52,17 @@ export const registerFormSchema = z
       path: ["companyName"],
     }
   );
+
+export const addProductSchema = z.object({
+  name: z.string().min(1, "Product Name is required"),
+  category: z.string().min(1, "Product category is required"),
+  price: z.preprocess(
+    (val) => Number(val),
+    z.number().positive("Price must be a positive number")
+  ),
+  stock: z.preprocess(
+    (val) => Number(val),
+    z.number().int().min(0, "Stock must be a non negative Integer")
+  ),
+  imageUrl: z.any(),
+});

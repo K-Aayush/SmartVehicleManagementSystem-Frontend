@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 
 export default function ProfileHudTop() {
-  const { token, logout } = useContext(AppContext);
+  const { token, logout, userData } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -30,8 +30,8 @@ export default function ProfileHudTop() {
           <Avatar className="relative overflow-visible size-[40px] rounded-full bg-white dark:bg-gray-800 border transition-all duration-300 ease-in-out dark:border-white/20 hover:dark:border-white border-black/40 hover:border-black cursor-pointer">
             <div className="relative flex items-center justify-center rounded-full size-full">
               <AvatarImage
-                className="rounded-full size-full"
-                src={""}
+                className="object-cover object-top rounded-full size-full"
+                src={userData?.profileImage}
                 alt={"username"}
               />
               <AvatarFallback>
