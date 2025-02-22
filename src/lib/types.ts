@@ -40,3 +40,18 @@ export interface userDataProps {
   phone: string;
   companyName?: string;
 }
+
+export interface productDataProps {
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+}
+
+export interface vendorProductResponse {
+  success: boolean;
+  message: string;
+  product: productDataProps;
+  token: string;
+  images: string[];
+}

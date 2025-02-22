@@ -64,5 +64,5 @@ export const addProductSchema = z.object({
     (val) => Number(val),
     z.number().int().min(0, "Stock must be a non negative Integer")
   ),
-  imageUrl: z.array(z.string()).min(1, "At least one image is required"),
+  imageUrl: z.any(),
 });
