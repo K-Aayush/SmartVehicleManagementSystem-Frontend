@@ -3,8 +3,8 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const VendorDashboard = () => {
   return (
-    <div className="min-h-screen">
-      <div className="flex items-start overflow-y-auto">
+    <div className="flex">
+      <div className="flex items-start w-full overflow-y-auto">
         {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
           <ul className="flex flex-col items-start pt-5 text-gray-800 dark:text-gray-300">
@@ -44,7 +44,7 @@ const VendorDashboard = () => {
           </ul>
         </div>
 
-        <div className="pt-5 ml-5">
+        <div className="flex-1 pt-5 ml-5">
           <Outlet />
         </div>
       </div>

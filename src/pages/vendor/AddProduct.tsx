@@ -2,30 +2,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FormInput } from "../../components/Form-Input";
 import { Form } from "../../components/ui/form";
-import { loginFormData, loginFormSchema } from "../../lib/validator";
+import { addProductFormData, addProductSchema } from "../../lib/validator";
 
 const AddProduct = () => {
-  const form = useForm<loginFormData>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<addProductFormData>({
+    resolver: zodResolver(addProductSchema),
     mode: "onChange",
     defaultValues: {
-      email: "",
-      password: "",
+      name: "",
+      category: "",
+      price: 0,
+      stock: 0,
+      imageUrl: [],
     },
   });
 
   return (
-    <div>
-      <Form {...form}>
-        <FormInput
-          control={form.control}
-          name="email"
-          label="Email"
-          placeholder="Email"
-          type="text"
-          required
-        />
-      </Form>
+    <div className="flex flex-col w-full">
+      <form action="" className="w-full max-w-3xl">
+        <Form {...form}>
+          <FormInput
+            control={form.control}
+            name="name"
+            label="Product Title"
+            placeholder="Add product Title"
+            type="text"
+            required
+          />
+        </Form>
+      </form>
     </div>
   );
 };
