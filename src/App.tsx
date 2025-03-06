@@ -17,6 +17,8 @@ import ServiceProviderDashboardPage from "./pages/service-provider/ServiceProvid
 import VendorDashboardPage from "./pages/vendor/VendorDashboardPage";
 import UserDashboardPage from "./pages/user/UserDashboardPage";
 import AddProduct from "./pages/vendor/AddProduct";
+import AdminDashboard from "./pages/admin/AdminDashboars";
+import ViewAdminDashboard from "./pages/admin/ViewAdminDashboard";
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +30,7 @@ const App = () => {
     "/user",
     "/vendor",
     "/service-provider",
+    "/admin",
   ];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(
@@ -118,6 +121,17 @@ const App = () => {
           }
         >
           <Route path="" element={<ServiceProviderDashboardPage />} />
+        </Route>
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoutes requiredRole="ADMIN">
+              <AdminDashboard />
+            </ProtectedRoutes>
+          }
+        >
+          <Route path="dashboard" element={<ViewAdminDashboard />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

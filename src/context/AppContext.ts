@@ -13,6 +13,8 @@ interface AppContextType {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   registerUser: (userData: registerFormData) => void;
   logout: () => void;
+  error: string | null;
+  setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const defaultValue: AppContextType = {
@@ -25,6 +27,8 @@ const defaultValue: AppContextType = {
   setIsLoading: () => {},
   registerUser: () => {},
   logout: () => {},
+  error: "",
+  setError: () => {},
 };
 
 export const AppContext = createContext<AppContextType>(defaultValue);

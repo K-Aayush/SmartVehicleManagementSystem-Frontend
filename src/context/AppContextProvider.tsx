@@ -16,6 +16,7 @@ export const AppContextProvider = ({
 
   //loading state
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>("");
 
   //get token
   const [token, setToken] = useState<string | null>(
@@ -136,6 +137,8 @@ export const AppContextProvider = ({
     setIsLoading,
     registerUser,
     logout,
+    error,
+    setError,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
