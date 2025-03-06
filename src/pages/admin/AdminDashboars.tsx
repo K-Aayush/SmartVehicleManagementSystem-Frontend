@@ -1,57 +1,43 @@
-import { Home, LayoutDashboard, Search, User } from "lucide-react";
-import logo from "../../assets/vehiclemanagementlogo.svg";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "../../components/ui/avatar";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AppContext } from "../../context/AppContext";
+import { Home, LayoutDashboard, Search } from "lucide-react";
+
+import { NavLink, Outlet } from "react-router-dom";
 
 const AdminDashboard = () => {
-  const { logout, userData } = useContext(AppContext);
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    logout();
-    navigate("/");
-  };
   return (
     <div className="min-h-screen">
       <div className="flex items-start">
         {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
-          <ul className="flex flex-col items-start pt-5 text-gray-800">
+          <ul className="flex flex-col items-start pt-5 text-gray-800 dark:text-gray-300">
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-800 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/adminDashboard/dashboard"}
+              to={"/admin/dashboard"}
             >
               <LayoutDashboard />
               <p>Dashboard</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-800 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/adminDashboard/viewUsers"}
+              to={"/admin/viewUsers"}
             >
               <Search />
               <p>View All Users</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${
-                  isActive && "bg-indigo-100 border-r-4 border-primary"
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-800 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/adminDashboard/manage-service"}
+              to={"/admin/manage-service"}
             >
               <Home />
               <p>Manage Services</p>
