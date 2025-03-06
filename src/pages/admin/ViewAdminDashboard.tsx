@@ -20,12 +20,15 @@ const ViewAdminDashboard = () => {
     setIsLoading(true);
     setError("");
     try {
-      const { data } = await axios.get(`${backendUrl}/api/admin/getAllUsers`, {
-        params: { role },
-        headers: {
-          Authorization: token,
-        },
-      });
+      const { data } = await axios.get(
+        `${backendUrl}/api/admin/getTotalUsers`,
+        {
+          params: { role },
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       if (data.success) {
         setTotalUsers((prev) => ({
           ...prev,
