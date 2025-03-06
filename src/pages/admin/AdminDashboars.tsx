@@ -1,5 +1,5 @@
 import { Home, LayoutDashboard, Search, User } from "lucide-react";
-import logo from "../../assets/Logo.svg";
+import logo from "../../assets/vehiclemanagementlogo.svg";
 import {
   Avatar,
   AvatarImage,
@@ -19,44 +19,6 @@ const AdminDashboard = () => {
   };
   return (
     <div className="min-h-screen">
-      {/*Navbar for requiter pannel*/}
-      <div className="py-4 shadow">
-        <div className="flex items-start justify-between px-5">
-          <img
-            className="cursor-pointer max-sm:w-32"
-            src={logo}
-            alt="logo"
-            width={200}
-            height={200}
-          />
-          <div className="flex items-center gap-3">
-            <p className="max-sm:hidden">Welcome, {userData?.name}</p>
-            <div className="relative group">
-              <Avatar className="w-12 h-12">
-                <AvatarImage
-                  className="object-cover object-top w-full h-full rounded-full"
-                  src={userData?.profileImage}
-                  alt={"username"}
-                />
-                <AvatarFallback>
-                  <User />
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute top-0 right-0 z-10 hidden pt-12 text-black rounded group-hover:block">
-                <ul className="p-2 m-0 text-sm list-none border rounded-md bg-gray-50 hover:bg-gray-100">
-                  <li
-                    onClick={handleLogout}
-                    className="px-2 py-1 pr-10 cursor-pointer"
-                  >
-                    Logout
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="flex items-start">
         {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
