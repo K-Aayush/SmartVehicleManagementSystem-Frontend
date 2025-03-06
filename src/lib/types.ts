@@ -55,3 +55,10 @@ export interface vendorProductResponse {
   token: string;
   images: string[];
 }
+
+export interface TotalUsersState {
+  TOTAL: number;
+  USER: number;
+  VENDOR: number;
+  SERVICE_PROVIDER: number;
+}
