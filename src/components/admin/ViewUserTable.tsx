@@ -1,34 +1,47 @@
+import { userDataProps } from "../../lib/types";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../ui/table";
 
-const ViewUserTable = ({ item }) => {
+const ViewUserTable = ({ users }) => {
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <div className="overflow-x-auto">
+      <Table className="w-full border border-gray-200">
+        <TableHeader>
+          <TableRow className="bg-gray-800">
+            <TableHead className="text-left">ID</TableHead>
+            <TableHead className="text-left">Name</TableHead>
+            <TableHead className="text-left">Email</TableHead>
+            <TableHead className="text-left">Phone</TableHead>
+            <TableHead className="text-left">Company Name</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users.length > 0 ? (
+            users.map((user: userDataProps) => (
+              <TableRow key={user.id} className="border-t border-gray-200">
+                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.phone}</TableCell>
+                <TableCell>{user.companyName || "N/A"}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={5} className="py-4 text-center">
+                No users found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
