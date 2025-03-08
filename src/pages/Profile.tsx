@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { Edit, Settings } from "lucide-react";
-import { FormInput } from "../components/Form-Input";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
@@ -30,7 +29,7 @@ const Profile = () => {
 
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Email</Label>
-            <div className="flex items-center w-full max-w-md gap-6">
+            <div className="flex items-center w-full max-w-md gap-6 mt-2">
               <Input
                 className="w-full"
                 placeholder={userData?.email}
@@ -42,7 +41,7 @@ const Profile = () => {
 
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Full Name</Label>
-            <div className="flex items-center w-full max-w-md gap-6">
+            <div className="flex items-center w-full max-w-md gap-6 mt-2">
               <Input className="w-full" placeholder={userData?.name} disabled />
               <Button variant={"outline"}>
                 <Edit /> Edit
@@ -52,7 +51,7 @@ const Profile = () => {
 
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Phone Number</Label>
-            <div className="flex items-center w-full max-w-md gap-6">
+            <div className="flex items-center w-full max-w-md gap-6 mt-2">
               <Input
                 className="w-full"
                 placeholder={userData?.phone}
@@ -66,7 +65,7 @@ const Profile = () => {
 
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Password</Label>
-            <div className="flex items-center w-full max-w-md gap-6">
+            <div className="flex items-center w-full max-w-md gap-6 mt-2">
               <Input className="w-full" placeholder="***********" disabled />
               <Button variant={"outline"}>
                 <Edit /> Edit
@@ -77,13 +76,31 @@ const Profile = () => {
           {userData?.role === "VENDOR" && (
             <div className="items-center justify-between w-full md:flex">
               <Label className="text-lg min-w-max">Company Name</Label>
-              <Input
-                className="w-full max-w-md mt-2"
-                placeholder={userData?.companyName}
-                disabled
-              />
+              <div className="flex items-center w-full max-w-md gap-6 mt-2">
+                <Input
+                  className="w-full"
+                  placeholder={userData?.companyName}
+                  disabled
+                />
+                <div className="w-[110px]"></div>
+              </div>
             </div>
           )}
+
+          <div className="items-center justify-between w-full py-6 border-b md:flex">
+            <div className="flex flex-col ">
+              <h2 className="text-lg min-w-max">Delete Account</h2>
+              <p className="max-w-xs text-xs">
+                Please note: This action cannot be undone and will permanently
+                delete your account.
+              </p>
+            </div>
+            <div className="flex items-center w-full max-w-md gap-6">
+              <Button className="mt-2" variant={"destructive"}>
+                Delete
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
