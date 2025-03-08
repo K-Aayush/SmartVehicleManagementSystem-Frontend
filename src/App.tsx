@@ -19,6 +19,7 @@ import UserDashboardPage from "./pages/user/UserDashboardPage";
 import AddProduct from "./pages/vendor/AddProduct";
 import AdminDashboard from "./pages/admin/AdminDashboars";
 import ViewAdminDashboard from "./pages/admin/ViewAdminDashboard";
+import ManageUsers from "./pages/admin/ManageUsers";
 
 const App = () => {
   const location = useLocation();
@@ -132,6 +133,7 @@ const App = () => {
           }
         >
           <Route path="dashboard" element={<ViewAdminDashboard />} />
+          <Route path="manageUsers" element={<ManageUsers />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
