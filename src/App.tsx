@@ -20,9 +20,13 @@ import AddProduct from "./pages/vendor/AddProduct";
 import AdminDashboard from "./pages/admin/AdminDashboars";
 import ViewAdminDashboard from "./pages/admin/ViewAdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
+import Profile from "./pages/Profile";
+import { useContext } from "react";
+import { AppContext } from "./context/AppContext";
 
 const App = () => {
   const location = useLocation();
+  const { token } = useContext(AppContext);
 
   const hideNavbarRoutes = ["/login", "/register"];
   const hideFooterRoutes = [
@@ -48,6 +52,7 @@ const App = () => {
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
+        {token && <Route path="/profile" element={<Profile />} />}
 
         <Route
           path="/login"

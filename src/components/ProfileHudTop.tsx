@@ -57,10 +57,12 @@ export default function ProfileHudTop() {
             </>
           ) : (
             <>
-              <DropdownMenuItem className="cursor-pointer">
-                <CgProfile className="mr-2 size-4" />
-                Profile
-              </DropdownMenuItem>
+              <Link to={"/Profile"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <CgProfile className="mr-2 size-4" />
+                  Profile
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem
                 onClick={handleLogout}
                 className="text-red-600 cursor-pointer dark:text-red-400"
