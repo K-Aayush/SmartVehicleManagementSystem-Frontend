@@ -9,7 +9,7 @@ const ManageUsers = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div>
+    <div className="p-4 mx-4">
       <ViewUserTable />
     </div>
   );
