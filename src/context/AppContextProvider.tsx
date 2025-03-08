@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
-import { authResponse, tokenCheck, userDataProps } from "../lib/types";
+import {
+  AllUsersState,
+  authResponse,
+  tokenCheck,
+  userDataProps,
+} from "../lib/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +28,54 @@ export const AppContextProvider = ({
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
+
+  //get all users states
+  const [allUsers, setAllUsers] = useState<AllUsersState>({
+    TOTAL: [],
+    USER: [],
+    VENDOR: [],
+    SERVICE_PROVIDER: [],
+  });
+
+  //fetching all users
+  const fetchAllUsers = async (role = "") => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/admin/getAllUsers`, {
+        params: { role },
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (data.success) {
+        setAllUsers((prev) => ({
+          ...prev,
+          [role || "TOTAL"]: data.users,
+        }));
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      //Axios error
+      if (error instanceof AxiosError && error.response) {
+        setError(error.response.data.message);
+      } else if (error instanceof Error) {
+        setError(error.message || "An error occoured while fetching data");
+      } else {
+        setError("Internal Server Error");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers("");
+    fetchAllUsers("USER");
+    fetchAllUsers("VENDOR");
+    fetchAllUsers("SERVICE_PROVIDER");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
