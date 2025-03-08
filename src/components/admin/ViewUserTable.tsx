@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "../ui/table";
 
-const ViewUserTable = () => {
+const ViewUserTable = ({ item }) => {
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
