@@ -8,7 +8,11 @@ import {
   TableRow,
 } from "../ui/table";
 
-const ViewUserTable = ({ users }) => {
+interface viewUserTableProps {
+  users: userDataProps[];
+}
+
+const ViewUserTable = ({ users }: viewUserTableProps) => {
   return (
     <div className="overflow-x-auto">
       <Table className="w-full border border-gray-200">
