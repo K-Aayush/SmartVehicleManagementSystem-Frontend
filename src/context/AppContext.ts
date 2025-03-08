@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { userDataProps } from "../lib/types";
+import { AllUsersState, userDataProps } from "../lib/types";
 import { registerFormData } from "../lib/validator";
 
 //Type of AppContext
@@ -15,6 +15,8 @@ interface AppContextType {
   logout: () => void;
   error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
+  allUsers: AllUsersState;
+  setAllUsers: React.Dispatch<React.SetStateAction<AllUsersState>>;
 }
 
 const defaultValue: AppContextType = {
@@ -29,6 +31,8 @@ const defaultValue: AppContextType = {
   logout: () => {},
   error: "",
   setError: () => {},
+  allUsers: { TOTAL: [], USER: [], SERVICE_PROVIDER: [], VENDOR: [] },
+  setAllUsers: () => {},
 };
 
 export const AppContext = createContext<AppContextType>(defaultValue);

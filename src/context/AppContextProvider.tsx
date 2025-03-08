@@ -192,6 +192,8 @@ export const AppContextProvider = ({
     logout,
     error,
     setError,
+    allUsers,
+    setAllUsers,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
