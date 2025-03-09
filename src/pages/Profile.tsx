@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import { Edit, Settings } from "lucide-react";
+import { Edit, Save, Settings } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { profileSchema, profileSchemaData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { Axios, AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
 interface UpdateUserDataParams {
@@ -36,7 +36,8 @@ const Profile = () => {
     defaultValues: {
       name: userData?.name || "",
       phone: userData?.phone || "",
-      password: "",
+      oldPassword: "",
+      newPassword: "",
     },
     mode: "onChange",
   });
@@ -81,7 +82,16 @@ const Profile = () => {
     },
   });
 
-  
+  // Handle Save action
+  const onSubmit = ({
+    data,
+    field,
+  }: {
+    data: Record<string, string>;
+    field: string;
+  }) => {
+    mutation.mutate({ field, value: data[field] });
+  };
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -114,13 +124,37 @@ const Profile = () => {
             </div>
           </div>
 
+          {/* Full Name */}
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Full Name</Label>
-            <div className="flex items-center w-full max-w-md gap-6 mt-2">
-              <Input className="w-full" placeholder={userData?.name} disabled />
-              <Button variant={"outline"}>
-                <Edit /> Edit
-              </Button>
+            <div className="flex flex-col w-full max-w-md">
+              <div className="flex w-full gap-6">
+                <Input
+                  className="w-full"
+                  {...register("name")}
+                  disabled={!isEditing.name}
+                />
+                {isEditing.name ? (
+                  <Button
+                    onClick={handleSubmit((data) =>
+                      onSubmit({ data, field: "name" })
+                    )}
+                  >
+                    Save
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditing({ ...isEditing, name: true })}
+                  >
+                    <Edit /> Edit
+                  </Button>
+                )}
+              </div>
+
+              {errors.name && (
+                <p className="text-red-500">{errors.name.message}</p>
+              )}
             </div>
           </div>
 
@@ -129,22 +163,88 @@ const Profile = () => {
             <div className="flex items-center w-full max-w-md gap-6 mt-2">
               <Input
                 className="w-full"
-                placeholder={userData?.phone}
-                disabled
+                {...register("phone")}
+                value={userData?.phone}
+                disabled={!isEditing.phone}
               />
-              <Button variant={"outline"}>
-                <Edit /> Edit
-              </Button>
+              {isEditing.phone ? (
+                <Button
+                  onClick={handleSubmit((data) =>
+                    onSubmit({ data, field: "phone" })
+                  )}
+                >
+                  Save
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => setIsEditing({ ...isEditing, phone: true })}
+                >
+                  <Edit /> Edit
+                </Button>
+              )}
             </div>
           </div>
 
+          {/* Password Section */}
           <div className="items-center justify-between w-full pb-6 border-b md:flex">
             <Label className="text-lg min-w-max">Password</Label>
             <div className="flex items-center w-full max-w-md gap-6 mt-2">
-              <Input className="w-full" placeholder="***********" disabled />
-              <Button variant={"outline"}>
-                <Edit /> Edit
-              </Button>
+              {isEditing.password ? (
+                <>
+                  <div className="flex flex-col w-full">
+                    <div className="w-full">
+                      <Input
+                        type="password"
+                        className="w-full"
+                        placeholder="Current password"
+                        {...register("oldPassword")}
+                      />
+                      {errors.oldPassword && (
+                        <p className="text-red-500">
+                          {errors.oldPassword.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="w-full mt-2">
+                      <Input
+                        type="password"
+                        className="w-full"
+                        placeholder="New password"
+                        {...register("newPassword")}
+                      />
+                      {errors.newPassword && (
+                        <p className="text-red-500">
+                          {errors.newPassword.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleSubmit((data) =>
+                      onSubmit({ data, field: "password" })
+                    )}
+                  >
+                    <Save /> Save
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Input
+                    className="w-full"
+                    placeholder="***********"
+                    disabled
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      setIsEditing({ ...isEditing, password: true })
+                    }
+                  >
+                    <Edit /> Edit
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 

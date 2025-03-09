@@ -72,21 +72,25 @@ export const addProductSchema = z.object({
 export const profileSchema = z.object({
   name: z.string().min(3, "Full name must be at least 3 characters"),
   phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
-  password: z
-    .string({ required_error: "Password is required" })
-    .min(3, "Must be 3 or more characters long")
-    .max(20, "Must be less than 20 characters")
+  oldPassword: z.string().min(1, "Old password is required").optional(),
+  newPassword: z
+    .string({ required_error: "New password is required" })
+    .min(3, "New password must be at least 3 characters")
+    .max(20, "New password must be less than 20 characters")
     .refine(
       (password) => /[A-Z]/.test(password),
-      "Must contain one capital letter"
+      "Must contain at least one uppercase letter"
     )
     .refine(
       (password) => /[a-z]/.test(password),
-      "Must contain one small letter"
+      "Must contain at least one lowercase letter"
     )
-    .refine((password) => /[0-9]/.test(password), "Must contain one number")
+    .refine(
+      (password) => /[0-9]/.test(password),
+      "Must contain at least one number"
+    )
     .refine(
       (password) => /[!@#$%^&*]/.test(password),
-      "Must contain one special character"
+      "Must contain at least one special character"
     ),
 });

@@ -23,6 +23,7 @@ import ManageUsers from "./pages/admin/ManageUsers";
 import Profile from "./pages/Profile";
 import { useContext } from "react";
 import { AppContext } from "./context/AppContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const App = () => {
   const location = useLocation();
@@ -46,13 +47,24 @@ const App = () => {
     `/${location.pathname.split("/")[1]}`
   );
 
+  const queryClient = new QueryClient();
+
   return (
     <div>
       {!shouldHideNavbar && <Navbar />}
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
-        {token && <Route path="/profile" element={<Profile />} />}
+        {token && (
+          <Route
+            path="/profile"
+            element={
+              <QueryClientProvider client={queryClient}>
+                <Profile />
+              </QueryClientProvider>
+            }
+          />
+        )}
 
         <Route
           path="/login"
