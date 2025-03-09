@@ -8,9 +8,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { profileSchema, profileSchemaData } from "../lib/validator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { Axios, AxiosError } from "axios";
+import { toast } from "sonner";
+
+interface UpdateUserDataParams {
+  field: string;
+  value: string | number;
+}
 
 const Profile = () => {
-  const { userData, isLoading } = useContext(AppContext);
+  const { userData, isLoading, backendUrl, token } = useContext(AppContext);
   const queryClient = useQueryClient();
 
   // State variables to manage input and editing mode
@@ -33,6 +40,48 @@ const Profile = () => {
     },
     mode: "onChange",
   });
+
+  const updateUserData = async ({ field, value }: UpdateUserDataParams) => {
+    try {
+      const { data } = await axios.put(
+        `${backendUrl}/api/auth/${field}`,
+        { [field]: value },
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      //status axios error
+      if (error instanceof AxiosError && error.response?.data) {
+        toast.error(error.response.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message || "Error while updating data");
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
+  //react query mutaion hook
+  const mutation = useMutation({
+    mutationFn: ({ field, value }: { field: string; value: string | number }) =>
+      updateUserData({ field, value }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["userData"] });
+      setIsEditing((prev) => ({ ...prev, [variables.field]: false }));
+    },
+  });
+
+  
 
   if (isLoading) return <div>Loading...</div>;
 
