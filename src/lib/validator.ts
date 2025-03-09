@@ -3,6 +3,7 @@ import { z } from "zod";
 export type loginFormData = z.infer<typeof loginFormSchema>;
 export type registerFormData = z.infer<typeof registerFormSchema>;
 export type addProductFormData = z.infer<typeof addProductSchema>;
+export type profileSchemaData = z.infer<typeof profileSchema>;
 
 export const loginFormSchema = z.object({
   email: z.string({ required_error: "Email is required" }),
@@ -65,4 +66,27 @@ export const addProductSchema = z.object({
     z.number().int().min(0, "Stock must be a non negative Integer")
   ),
   imageUrl: z.any(),
+});
+
+// Define validation schema using Zod
+const profileSchema = z.object({
+  name: z.string().min(3, "Full name must be at least 3 characters"),
+  phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(3, "Must be 3 or more characters long")
+    .max(20, "Must be less than 20 characters")
+    .refine(
+      (password) => /[A-Z]/.test(password),
+      "Must contain one capital letter"
+    )
+    .refine(
+      (password) => /[a-z]/.test(password),
+      "Must contain one small letter"
+    )
+    .refine((password) => /[0-9]/.test(password), "Must contain one number")
+    .refine(
+      (password) => /[!@#$%^&*]/.test(password),
+      "Must contain one special character"
+    ),
 });

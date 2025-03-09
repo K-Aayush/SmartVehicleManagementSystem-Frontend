@@ -1,13 +1,22 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { Edit, Settings } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Profile = () => {
   const { userData, isLoading } = useContext(AppContext);
+  const queryClient = useQueryClient();
+
+  // State variables to manage input and editing mode
+  const [isEditing, setIsEditing] = useState({
+    name: false,
+    phone: false,
+    password: false,
+  });
+  const 
 
   if (isLoading) return <div>Loading...</div>;
 
