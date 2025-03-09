@@ -19,9 +19,15 @@ import UserDashboardPage from "./pages/user/UserDashboardPage";
 import AddProduct from "./pages/vendor/AddProduct";
 import AdminDashboard from "./pages/admin/AdminDashboars";
 import ViewAdminDashboard from "./pages/admin/ViewAdminDashboard";
+import ManageUsers from "./pages/admin/ManageUsers";
+import Profile from "./pages/Profile";
+import { useContext } from "react";
+import { AppContext } from "./context/AppContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const App = () => {
   const location = useLocation();
+  const { token } = useContext(AppContext);
 
   const hideNavbarRoutes = ["/login", "/register"];
   const hideFooterRoutes = [
@@ -41,12 +47,24 @@ const App = () => {
     `/${location.pathname.split("/")[1]}`
   );
 
+  const queryClient = new QueryClient();
+
   return (
     <div>
       {!shouldHideNavbar && <Navbar />}
       <Toaster richColors duration={5000} />
       <Routes>
         <Route path="/" element={<Home />} />
+        {token && (
+          <Route
+            path="/profile"
+            element={
+              <QueryClientProvider client={queryClient}>
+                <Profile />
+              </QueryClientProvider>
+            }
+          />
+        )}
 
         <Route
           path="/login"
@@ -132,6 +150,7 @@ const App = () => {
           }
         >
           <Route path="dashboard" element={<ViewAdminDashboard />} />
+          <Route path="manageUsers" element={<ManageUsers />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

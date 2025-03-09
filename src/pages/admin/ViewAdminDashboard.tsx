@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import ViewUserCard from "../../components/admin/ViewUserCard";
 import { TotalUsersState } from "../../lib/types";

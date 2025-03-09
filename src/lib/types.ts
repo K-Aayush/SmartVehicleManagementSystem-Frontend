@@ -62,3 +62,10 @@ export interface TotalUsersState {
   VENDOR: number;
   SERVICE_PROVIDER: number;
 }
+
+export interface AllUsersState {
+  TOTAL: userDataProps[];
+  USER: userDataProps[];
+  VENDOR: userDataProps[];
+  SERVICE_PROVIDER: userDataProps[];
+}
