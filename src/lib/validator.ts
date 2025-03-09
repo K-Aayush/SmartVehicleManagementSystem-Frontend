@@ -69,7 +69,7 @@ export const addProductSchema = z.object({
 });
 
 // Define validation schema using Zod
-const profileSchema = z.object({
+export const profileSchema = z.object({
   name: z.string().min(3, "Full name must be at least 3 characters"),
   phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
   password: z

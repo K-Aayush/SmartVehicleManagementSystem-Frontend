@@ -5,6 +5,9 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { profileSchema, profileSchemaData } from "../lib/validator";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Profile = () => {
   const { userData, isLoading } = useContext(AppContext);
@@ -16,7 +19,20 @@ const Profile = () => {
     phone: false,
     password: false,
   });
-  const 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<profileSchemaData>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: userData?.name || "",
+      phone: userData?.phone || "",
+      password: "",
+    },
+    mode: "onChange",
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
