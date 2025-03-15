@@ -105,4 +105,16 @@ export const profileSchema = z
         "Password must include uppercase, lowercase, number, and special character",
       path: ["newPassword"],
     }
+  )
+  .refine(
+    (data) => {
+      if (data.newPassword === data.oldPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "New Password and old password cannot be same",
+      path: ["newPassword"],
+    }
   );

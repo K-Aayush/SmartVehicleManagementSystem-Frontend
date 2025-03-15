@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { Edit, Save, Settings } from "lucide-react";
 import { Input } from "../components/ui/input";
@@ -11,7 +11,8 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
 const Profile = () => {
-  const { userData, isLoading, backendUrl, token } = useContext(AppContext);
+  const { userData, isLoading, backendUrl, token, setUserData } =
+    useContext(AppContext);
 
   // State variables to manage input and editing mode
   const [isEditing, setIsEditing] = useState({
@@ -24,6 +25,7 @@ const Profile = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<profileSchemaData>({
     resolver: zodResolver(profileSchema),
@@ -36,6 +38,14 @@ const Profile = () => {
     },
     mode: "onChange",
   });
+
+  // Update form values when userData changes
+  useEffect(() => {
+    if (userData) {
+      setValue("name", userData.name || "");
+      setValue("phone", userData.phone || "");
+    }
+  }, [userData, setValue]);
 
   // Handle Save action
   const onSubmit = async (user: profileSchemaData) => {
@@ -71,6 +81,16 @@ const Profile = () => {
 
       if (data.success) {
         toast.success(data.message);
+        setUserData(data.user);
+
+        reset({
+          name: data.user.name,
+          phone: data.user.phone,
+          oldPassword: "",
+          newPassword: "",
+          profileImage: "",
+        });
+        setIsEditing({ name: false, phone: false, password: false });
       } else {
         toast.error(data.message);
       }
@@ -89,7 +109,7 @@ const Profile = () => {
 
   return (
     <div className="w-full min-h-screen ">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="flex flex-col justify-center px-6 py-16 space-y-6 md:mx-16">
           <div className="relative w-32 h-32">
             <img
@@ -134,9 +154,24 @@ const Profile = () => {
                     disabled={!isEditing.name}
                   />
                   {isEditing.name ? (
-                    <Button type="submit">Save</Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        handleSubmit((data) => {
+                          onSubmit({
+                            ...data,
+                            oldPassword: "",
+                            newPassword: "",
+                          });
+                        })();
+                        setIsEditing((prev) => ({ ...prev, name: false }));
+                      }}
+                    >
+                      <Save /> Save
+                    </Button>
                   ) : (
                     <Button
+                      type="button"
                       variant="outline"
                       onClick={() =>
                         setIsEditing((prev) => ({ ...prev, name: true }))
@@ -162,11 +197,28 @@ const Profile = () => {
                   disabled={!isEditing.phone}
                 />
                 {isEditing.phone ? (
-                  <Button type="submit">Save</Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      handleSubmit((data) => {
+                        onSubmit({
+                          ...data,
+                          oldPassword: "",
+                          newPassword: "",
+                        });
+                      })();
+                      setIsEditing((prev) => ({ ...prev, phone: false }));
+                    }}
+                  >
+                    <Save /> Save
+                  </Button>
                 ) : (
                   <Button
+                    type="button"
                     variant="outline"
-                    onClick={() => setIsEditing({ ...isEditing, phone: true })}
+                    onClick={() =>
+                      setIsEditing((prev) => ({ ...prev, phone: true }))
+                    }
                   >
                     <Edit /> Edit
                   </Button>
@@ -208,7 +260,15 @@ const Profile = () => {
                         )}
                       </div>
                     </div>
-                    <Button type="submit">
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        handleSubmit((data) => {
+                          onSubmit(data);
+                        })();
+                        setIsEditing((prev) => ({ ...prev, password: false }));
+                      }}
+                    >
                       <Save /> Save
                     </Button>
                   </>
@@ -220,6 +280,7 @@ const Profile = () => {
                       disabled
                     />
                     <Button
+                      type="button"
                       variant="outline"
                       onClick={() => {
                         setIsEditing((prev) => ({ ...prev, password: true }));
