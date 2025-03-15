@@ -69,28 +69,52 @@ export const addProductSchema = z.object({
 });
 
 // Define validation schema using Zod
-export const profileSchema = z.object({
-  name: z.string().min(3, "Full name must be at least 3 characters"),
-  phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
-  oldPassword: z.string().min(1, "Old password is required").optional(),
-  newPassword: z
-    .string({ required_error: "New password is required" })
-    .min(3, "New password must be at least 3 characters")
-    .max(20, "New password must be less than 20 characters")
-    .refine(
-      (password) => /[A-Z]/.test(password),
-      "Must contain at least one uppercase letter"
-    )
-    .refine(
-      (password) => /[a-z]/.test(password),
-      "Must contain at least one lowercase letter"
-    )
-    .refine(
-      (password) => /[0-9]/.test(password),
-      "Must contain at least one number"
-    )
-    .refine(
-      (password) => /[!@#$%^&*]/.test(password),
-      "Must contain at least one special character"
-    ),
-});
+export const profileSchema = z
+  .object({
+    name: z.string().min(3, "Full name must be at least 3 characters"),
+    phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+    oldPassword: z.string().optional(),
+    newPassword: z.string().optional(),
+    profileImage: z.any().optional().nullable(),
+  })
+  .refine(
+    (data) => {
+      // Require both passwords if either is provided
+      if (data.oldPassword || data.newPassword) {
+        return !!data.oldPassword && !!data.newPassword;
+      }
+      return true;
+    },
+    {
+      message:
+        "Both old and new passwords are required to change your password",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.newPassword) {
+        return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{3,20}$/.test(
+          data.newPassword
+        );
+      }
+      return true;
+    },
+    {
+      message:
+        "Password must include uppercase, lowercase, number, and special character",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.newPassword === data.oldPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "New Password and old password cannot be same",
+      path: ["newPassword"],
+    }
+  );
