@@ -105,6 +105,32 @@ const Profile = () => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      if (window.confirm("Are you sure you want to delete this Account?")) {
+        const { data } = await axios.delete(`${backendUrl}/api/auth/me`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+
+        if (data.success) {
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data) {
+        toast.error(error.response.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message || "Error while deleting user");
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
@@ -317,7 +343,11 @@ const Profile = () => {
                 </p>
               </div>
               <div className="flex items-center w-full max-w-md gap-6">
-                <Button className="mt-2" variant={"destructive"}>
+                <Button
+                  onClick={handleDelete}
+                  className="mt-2"
+                  variant={"destructive"}
+                >
                   Delete
                 </Button>
               </div>
