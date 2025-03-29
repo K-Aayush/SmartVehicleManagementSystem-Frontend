@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { ArrowDown, LogIn, LogOut, UserRound } from "lucide-react";
+import { ArrowDown, LogIn, LogOut, UserRound, View } from "lucide-react";
 import { CgProfile } from "react-icons/cg";
 import {
   DropdownMenu,
@@ -54,6 +54,12 @@ export default function ProfileHudTop() {
                   Login
                 </DropdownMenuItem>
               </Link>
+              <Link to={"/products"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <View className="mr-2 size-4" />
+                  View Products
+                </DropdownMenuItem>
+              </Link>
             </>
           ) : (
             <>
@@ -61,6 +67,12 @@ export default function ProfileHudTop() {
                 <DropdownMenuItem className="cursor-pointer">
                   <CgProfile className="mr-2 size-4" />
                   Profile
+                </DropdownMenuItem>
+              </Link>
+              <Link to={"/products"}>
+                <DropdownMenuItem className="cursor-pointer">
+                  <View className="mr-2 size-4" />
+                  View Products
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem

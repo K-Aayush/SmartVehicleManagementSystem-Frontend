@@ -24,6 +24,7 @@ import Profile from "./pages/Profile";
 import { useContext } from "react";
 import { AppContext } from "./context/AppContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProductList from "./pages/ProductList";
 
 const App = () => {
   const location = useLocation();
@@ -74,6 +75,7 @@ const App = () => {
             </RedirectIfAuthenticated>
           }
         />
+        <Route path="/products" element={<ProductList />} />
         <Route
           path="/register"
           element={
