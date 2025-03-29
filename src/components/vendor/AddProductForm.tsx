@@ -11,7 +11,18 @@ import { AppContext } from "../../context/AppContext";
 import { vendorProductResponse } from "../../lib/types";
 import { toast } from "sonner";
 
+
 const AddProductForm = () => {
+  const motorVehicleCategories = [
+    "Vehicle Parts & Accessories",
+    "Vehicle Maintenance & Repair",
+    "Vehicle Electronics & Gadgets",
+    "Motorcycle & Two-Wheeler Accessories",
+    "Commercial & Heavy-Duty Vehicle Equipment",
+    "Customization & Performance Upgrades",
+    "Vehicle Rental & Leasing Services",
+  ];
+
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const { backendUrl, token } = useContext(AppContext);
   const form = useForm<addProductFormData>({
@@ -117,14 +128,24 @@ const AddProductForm = () => {
               type="text"
               required
             />
-            <FormInput
-              control={form.control}
-              name="category"
-              label="Product Category"
-              placeholder="Add Category Name"
-              type="text"
-              required
-            />
+
+            {/* Updated Category Field with Dropdown */}
+            <div className="flex flex-col">
+              <label className="mb-2 text-sm font-medium">
+                Product Category
+              </label>
+              <select
+                {...form.register("category")}
+                className="px-4 py-2 bg-[#020817] border border-gray-300 rounded-md"
+              >
+                <option value="">Select a Category</option>
+                {motorVehicleCategories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <div className="flex w-full gap-5">
               <div className="flex-1">
