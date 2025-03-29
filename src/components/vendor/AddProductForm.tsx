@@ -11,7 +11,6 @@ import { AppContext } from "../../context/AppContext";
 import { vendorProductResponse } from "../../lib/types";
 import { toast } from "sonner";
 
-
 const AddProductForm = () => {
   const motorVehicleCategories = [
     "Vehicle Parts & Accessories",
@@ -145,6 +144,11 @@ const AddProductForm = () => {
                   </option>
                 ))}
               </select>
+              {form.formState.errors.category && (
+                <span className="mt-1 text-sm text-red-500">
+                  {form.formState.errors.category.message}
+                </span>
+              )}
             </div>
 
             <div className="flex w-full gap-5">

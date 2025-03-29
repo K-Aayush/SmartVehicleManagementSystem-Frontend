@@ -56,7 +56,7 @@ export const registerFormSchema = z
 
 export const addProductSchema = z.object({
   name: z.string().min(1, "Product Name is required"),
-  category: z.string(),
+  category: z.string().min(1, "Please select a category"),
   price: z.preprocess(
     (val) => Number(val),
     z.number().positive("Price must be a positive number")
