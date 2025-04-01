@@ -3,6 +3,7 @@ import { AppContext } from "./AppContext";
 import {
   AllUsersState,
   authResponse,
+  productLists,
   tokenCheck,
   userDataProps,
 } from "../lib/types";
@@ -28,7 +29,7 @@ export const AppContextProvider = ({
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<productLists[]>([]);
 
   //get all users states
   const [allUsers, setAllUsers] = useState<AllUsersState>({
@@ -219,6 +220,8 @@ export const AppContextProvider = ({
     setError,
     allUsers,
     setAllUsers,
+    products,
+    setProducts,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
