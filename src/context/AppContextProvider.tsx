@@ -28,6 +28,7 @@ export const AppContextProvider = ({
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
+  const [products, setProducts] = useState([]);
 
   //get all users states
   const [allUsers, setAllUsers] = useState<AllUsersState>({
@@ -169,6 +170,30 @@ export const AppContextProvider = ({
       setIsLoading(false);
     }
   };
+
+  //fetch products
+  useEffect(() => {
+    const fetchProducts = async (sortBy = "createdAt", order = "desc") => {
+      // setBusiness(PopularBusinessList);
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(
+          `${backendUrl}/api/vendor/getProducts?sortBy=${sortBy}&order=${order}`
+        );
+
+        if (data.success) {
+          setProducts(data.products);
+        } else {
+          setError(data.message);
+        }
+      } catch (error) {
+        console.error("Error Fetching Products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [backendUrl]);
 
   //Logout function
   const logout = () => {
