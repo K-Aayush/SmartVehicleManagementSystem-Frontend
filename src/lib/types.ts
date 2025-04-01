@@ -69,19 +69,3 @@ export interface AllUsersState {
   VENDOR: userDataProps[];
   SERVICE_PROVIDER: userDataProps[];
 }
-
-export interface productLists {
-  id: string;
-  vendorId: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  createdAt: Date;
-  updatedAt: Date;
-  images: string[];
-  Vendor: {
-    name: string;
-    companyName: string;
-  };
-}

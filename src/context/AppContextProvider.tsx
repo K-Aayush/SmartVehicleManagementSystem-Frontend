@@ -10,6 +10,12 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { registerFormData } from "../lib/validator";
+import { jwtDecode } from "jwt-decode";
+
+interface DecodedToken {
+  id: string;
+  role: string;
+}
 
 export const AppContextProvider = ({
   children,
@@ -28,6 +34,8 @@ export const AppContextProvider = ({
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
+
+  const decoded = token ? jwtDecode<DecodedToken>(token) : null;
 
   //get all users states
   const [allUsers, setAllUsers] = useState<AllUsersState>({
@@ -71,10 +79,12 @@ export const AppContextProvider = ({
   };
 
   useEffect(() => {
-    fetchAllUsers("");
-    fetchAllUsers("USER");
-    fetchAllUsers("VENDOR");
-    fetchAllUsers("SERVICE_PROVIDER");
+    if (decoded?.role === "ADMIN") {
+      fetchAllUsers("");
+      fetchAllUsers("USER");
+      fetchAllUsers("VENDOR");
+      fetchAllUsers("SERVICE_PROVIDER");
+    }
   }, []);
 
   useEffect(() => {

@@ -34,7 +34,7 @@ interface Vendor {
 interface Product {
   id: string;
   name: string;
-  description: string;
+  category: string;
   price: number;
   stock: number;
   createdAt: string;
@@ -166,7 +166,7 @@ const ProductList = () => {
   );
 
   return (
-    <div className="container px-4 py-8 mx-auto">
+    <div className="container min-h-screen px-4 py-8 mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Products</h1>
 
@@ -260,7 +260,7 @@ const ProductList = () => {
                   <div className="relative w-full h-48 bg-gray-100">
                     {product.images && product.images.length > 0 ? (
                       <img
-                        src={product.images[0].url || "/placeholder.svg"}
+                        src={product.images[0].url}
                         alt={product.name}
                         className="object-cover w-full h-full"
                       />
@@ -275,7 +275,7 @@ const ProductList = () => {
                       {product.name}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                      {product.description || "No description available"}
+                      {product.category}
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-sm text-muted-foreground">
