@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { AllUsersState, productLists, userDataProps } from "../lib/types";
+import { AllUsersState, userDataProps } from "../lib/types";
 import { registerFormData } from "../lib/validator";
 
 //Type of AppContext
@@ -17,8 +17,7 @@ interface AppContextType {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
   allUsers: AllUsersState;
   setAllUsers: React.Dispatch<React.SetStateAction<AllUsersState>>;
-  products: productLists[];
-  setProducts: React.Dispatch<React.SetStateAction<productLists[]>>;
+
 }
 
 const defaultValue: AppContextType = {
@@ -35,8 +34,7 @@ const defaultValue: AppContextType = {
   setError: () => {},
   allUsers: { TOTAL: [], USER: [], SERVICE_PROVIDER: [], VENDOR: [] },
   setAllUsers: () => {},
-  products: [],
-  setProducts: () => {},
+
 };
 
 export const AppContext = createContext<AppContextType>(defaultValue);
