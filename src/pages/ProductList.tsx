@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
-import { ArrowDownAZ, ArrowUpAZ, Filter, X } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, Filter } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 
 // Define types
@@ -179,16 +179,6 @@ const ProductList = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[300px] sm:w-[350px]">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold">Filters & Sorting</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setOpenMobileFilters(false)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
             <SortingOptions />
           </SheetContent>
         </Sheet>
