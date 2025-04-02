@@ -23,6 +23,7 @@ const AddProductForm = () => {
   ];
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { backendUrl, token } = useContext(AppContext);
   const form = useForm<addProductFormData>({
     resolver: zodResolver(addProductSchema),
@@ -66,6 +67,7 @@ const AddProductForm = () => {
     productData
   ) => {
     console.log("Form Submitted: ", productData);
+    setIsSubmitting(true);
     try {
       //creating new formdata
       const formData = new FormData();
@@ -118,6 +120,8 @@ const AddProductForm = () => {
       } else {
         toast.error("Internal Server Error");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -200,8 +204,13 @@ const AddProductForm = () => {
               ))}
             </div>
           </div>
-          <Button type="submit" variant={"secondary"} className="mt-5">
-            Add Product
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            variant={"secondary"}
+            className="mt-5"
+          >
+            {isSubmitting ? "Loading..." : "Add Product"}
           </Button>
         </form>
       </Form>

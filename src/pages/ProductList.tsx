@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
@@ -47,6 +49,7 @@ const ProductList = () => {
   // State
   const [openMobileFilters, setOpenMobileFilters] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [displayCount, setDisplayCount] = useState(9);
 
   const { error, setError, isLoading, setIsLoading, backendUrl } =
     useContext(AppContext);
@@ -88,7 +91,7 @@ const ProductList = () => {
     };
 
     fetchProducts();
-  }, [backendUrl, sortBy, order]);
+  }, [backendUrl, sortBy, order, setError, setIsLoading]);
 
   // Handle sort field change
   const handleSortFieldChange = (value: string) => {
@@ -254,58 +257,72 @@ const ProductList = () => {
               <p className="text-muted-foreground">No products found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
-                <Card key={product.id} className="overflow-hidden">
-                  <div className="relative w-full h-48 bg-gray-100">
-                    {product.images && product.images.length > 0 ? (
-                      <img
-                        src={product.images[0].imageUrl}
-                        alt={product.name}
-                        className="object-cover w-full h-full"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center w-full h-full bg-gray-200">
-                        <span className="text-gray-400">No image</span>
-                      </div>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-semibold line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                      {product.category}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-sm text-muted-foreground">
-                        By{" "}
-                        {product.Vendor?.companyName ||
-                          product.Vendor?.name ||
-                          "Unknown vendor"}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        Added {formatDate(product.createdAt)}
-                      </span>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex items-center justify-between p-4 pt-0">
-                    <div className="font-semibold">
-                      {formatPrice(product.price)}
-                    </div>
-                    <div className="text-sm">
-                      {product.stock > 0 ? (
-                        <span className="text-green-600">
-                          In Stock ({product.stock})
-                        </span>
+            <>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {products.slice(0, displayCount).map((product) => (
+                  <Card key={product.id} className="overflow-hidden">
+                    <div className="relative w-full h-48 bg-gray-100">
+                      {product.images && product.images.length > 0 ? (
+                        <img
+                          src={product.images[0].imageUrl || "/placeholder.svg"}
+                          alt={product.name}
+                          className="object-cover w-full h-full"
+                        />
                       ) : (
-                        <span className="text-red-600">Out of Stock</span>
+                        <div className="flex items-center justify-center w-full h-full bg-gray-200">
+                          <span className="text-gray-400">No image</span>
+                        </div>
                       )}
                     </div>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
+                    <CardContent className="p-4">
+                      <h3 className="text-lg font-semibold line-clamp-1">
+                        {product.name}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                        {product.category}
+                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-sm text-muted-foreground">
+                          By{" "}
+                          {product.Vendor?.companyName ||
+                            product.Vendor?.name ||
+                            "Unknown vendor"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          Added {formatDate(product.createdAt)}
+                        </span>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="flex items-center justify-between p-4 pt-0">
+                      <div className="font-semibold">
+                        {formatPrice(product.price)}
+                      </div>
+                      <div className="text-sm">
+                        {product.stock > 0 ? (
+                          <span className="text-green-600">
+                            In Stock ({product.stock})
+                          </span>
+                        ) : (
+                          <span className="text-red-600">Out of Stock</span>
+                        )}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+              {products.length > displayCount && (
+                <div className="flex justify-center mt-8">
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      setDisplayCount((prevCount) => prevCount + 9)
+                    }
+                  >
+                    View More
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
