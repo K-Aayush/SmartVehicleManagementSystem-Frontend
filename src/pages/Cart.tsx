@@ -1,14 +1,27 @@
 import { CartContext } from "../context/CartContext";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "../components/ui/separator";
 import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } =
     useContext(CartContext);
 
+  const { token } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  // Handle checkout
+  const onCheckout = () => {
+    if (!token) {
+      alert("Please login to checkout your cart products");
+      navigate("/login");
+      return;
+    }
+    console.log("Checked");
+  };
   // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -24,7 +37,7 @@ const Cart = () => {
         <p className="mb-8 text-gray-600">
           Add some products to your cart to see them here.
         </p>
-        <Link to="/">
+        <Link to="/products">
           <Button>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Continue Shopping
@@ -162,7 +175,9 @@ const Cart = () => {
               </span>
             </div>
 
-            <Button className="w-full">Proceed to Checkout</Button>
+            <Button onClick={onCheckout} className="w-full">
+              Proceed to Checkout
+            </Button>
           </div>
         </div>
       </div>
