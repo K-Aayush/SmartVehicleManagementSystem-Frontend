@@ -1,4 +1,3 @@
-import React from "react";
 import { Product } from "../../lib/types";
 import { Button } from "../ui/button";
 import { Heart, ShoppingCart } from "lucide-react";

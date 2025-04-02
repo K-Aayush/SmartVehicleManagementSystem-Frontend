@@ -101,7 +101,6 @@ const ProductDetails = () => {
           product={productByCategory.filter(
             (product) => product.id !== productData?.id
           )}
-          selectedProductId={productData?.id}
         />
       </div>
     </div>
