@@ -3,8 +3,7 @@ import { CartContext, CartItem } from "./CartContext";
 import { ReactNode, useEffect, useState } from "react";
 import { Product } from "../lib/types";
 
-// Cart provider component
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   // Initialize cart from localStorage if available
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cart");
@@ -26,13 +25,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Add product to cart
   const addToCart = (product: Product) => {
     setCartItems((prevItems) => {
-      // Check if product already exists in cart
       const existingItemIndex = prevItems.findIndex(
         (item) => item.id === product.id
       );
 
       if (existingItemIndex > -1) {
-        // If product exists, increase quantity
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex] = {
           ...updatedItems[existingItemIndex],
@@ -40,7 +37,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         };
         return updatedItems;
       } else {
-        // If product doesn't exist, add it with quantity 1
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
