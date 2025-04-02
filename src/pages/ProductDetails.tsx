@@ -17,8 +17,9 @@ const ProductDetails = () => {
     setIsLoading,
     isLoading,
     products,
-    setProducts,
+
     setError,
+    error,
   } = useContext(AppContext);
   const [productByCategory, setProductByCategory] = useState<Product[]>([]);
   const [productData, setProductData] = useState<Product | null>(null);
@@ -60,7 +61,34 @@ const ProductDetails = () => {
     fetchProductData();
   }, [id, backendUrl, setError, setIsLoading]);
 
-  return <div>ProductDetails</div>;
+  useEffect(() => {
+    if (productData?.category) {
+      fetchProductByCategory(productData?.category);
+    }
+  }, [productData, fetchProductByCategory]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div className="text-sm text-red-500">{error}</div>;
+
+  return (
+    <div className="min-h-screen px-10 py-8 mx-6 md:py-20 md:px-26 lg:px-36 md:mx-16">
+      <ProductInfo product={productData} />
+
+      <div className="grid grid-cols-4 mt-16">
+        <div className="col-span-4 md:col-span-3">
+          <ProductDescription product={productData} />
+        </div>
+        <div className="hidden md:block">
+          <SuggestedProductList
+            product={productByCategory.filter(
+              (product) => product.id !== productData?.id
+            )}
+            selectedProductId={productData?.id}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ProductDetails;
