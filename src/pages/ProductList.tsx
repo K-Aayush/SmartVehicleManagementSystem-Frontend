@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardFooter } from "../components/ui/card";
@@ -260,54 +260,58 @@ const ProductList = () => {
             <>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {products.slice(0, displayCount).map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
-                    <div className="relative w-full h-48 bg-gray-100">
-                      {product.images && product.images.length > 0 ? (
-                        <img
-                          src={product.images[0].imageUrl || "/placeholder.svg"}
-                          alt={product.name}
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center w-full h-full bg-gray-200">
-                          <span className="text-gray-400">No image</span>
-                        </div>
-                      )}
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="text-lg font-semibold line-clamp-1">
-                        {product.name}
-                      </h3>
-                      <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                        {product.category}
-                      </p>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-sm text-muted-foreground">
-                          By{" "}
-                          {product.Vendor?.companyName ||
-                            product.Vendor?.name ||
-                            "Unknown vendor"}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Added {formatDate(product.createdAt)}
-                        </span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex items-center justify-between p-4 pt-0">
-                      <div className="font-semibold">
-                        {formatPrice(product.price)}
-                      </div>
-                      <div className="text-sm">
-                        {product.stock > 0 ? (
-                          <span className="text-green-600">
-                            In Stock ({product.stock})
-                          </span>
+                  <Link to={`/productDetails/${product.id}`}>
+                    <Card key={product.id} className="overflow-hidden">
+                      <div className="relative w-full h-48 bg-gray-100">
+                        {product.images && product.images.length > 0 ? (
+                          <img
+                            src={
+                              product.images[0].imageUrl || "/placeholder.svg"
+                            }
+                            alt={product.name}
+                            className="object-cover w-full h-full"
+                          />
                         ) : (
-                          <span className="text-red-600">Out of Stock</span>
+                          <div className="flex items-center justify-center w-full h-full bg-gray-200">
+                            <span className="text-gray-400">No image</span>
+                          </div>
                         )}
                       </div>
-                    </CardFooter>
-                  </Card>
+                      <CardContent className="p-4">
+                        <h3 className="text-lg font-semibold line-clamp-1">
+                          {product.name}
+                        </h3>
+                        <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                          {product.category}
+                        </p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-sm text-muted-foreground">
+                            By{" "}
+                            {product.Vendor?.companyName ||
+                              product.Vendor?.name ||
+                              "Unknown vendor"}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Added {formatDate(product.createdAt)}
+                          </span>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex items-center justify-between p-4 pt-0">
+                        <div className="font-semibold">
+                          {formatPrice(product.price)}
+                        </div>
+                        <div className="text-sm">
+                          {product.stock > 0 ? (
+                            <span className="text-green-600">
+                              In Stock ({product.stock})
+                            </span>
+                          ) : (
+                            <span className="text-red-600">Out of Stock</span>
+                          )}
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </Link>
                 ))}
               </div>
               {products.length > displayCount && (
