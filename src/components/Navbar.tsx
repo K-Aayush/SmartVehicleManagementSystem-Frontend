@@ -14,7 +14,7 @@ const Navbar = () => {
       </Link>
       <div className="flex items-center space-x-4">
         <Link
-          className="p-3 transition-all duration-300 ease-in-out bg-white border rounded-full cursor-pointer dark:bg-gray-800 dark:border-white/20 hover:dark:border-white border-black/40 hover:border-black"
+          className="relative p-3 transition-all duration-300 ease-in-out bg-white border rounded-full cursor-pointer dark:bg-gray-800 dark:border-white/20 hover:dark:border-white border-black/40 hover:border-black"
           to={"/cart"}
         >
           <ShoppingCart className="w-4 h-4 " />
