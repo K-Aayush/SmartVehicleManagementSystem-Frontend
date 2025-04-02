@@ -21,38 +21,20 @@ import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { ArrowDownAZ, ArrowUpAZ, Filter } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 
-// Define types
-interface ProductImage {
-  id: string;
-  imageUrl: string;
-  productId: string;
-}
-
-interface Vendor {
-  name: string;
-  companyName: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  createdAt: string;
-  vendorId: string;
-  images: ProductImage[];
-  Vendor: Vendor;
-}
-
 const ProductList = () => {
   // State
   const [openMobileFilters, setOpenMobileFilters] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
   const [displayCount, setDisplayCount] = useState(9);
 
-  const { error, setError, isLoading, setIsLoading, backendUrl } =
-    useContext(AppContext);
+  const {
+    error,
+    setError,
+    isLoading,
+    setIsLoading,
+    backendUrl,
+    products,
+    setProducts,
+  } = useContext(AppContext);
 
   // URL params for persistence
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,7 +73,7 @@ const ProductList = () => {
     };
 
     fetchProducts();
-  }, [backendUrl, sortBy, order, setError, setIsLoading]);
+  }, [backendUrl, sortBy, order, setError, setIsLoading, setProducts]);
 
   // Handle sort field change
   const handleSortFieldChange = (value: string) => {

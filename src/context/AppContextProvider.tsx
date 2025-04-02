@@ -3,6 +3,7 @@ import { AppContext } from "./AppContext";
 import {
   AllUsersState,
   authResponse,
+  Product,
   tokenCheck,
   userDataProps,
 } from "../lib/types";
@@ -28,6 +29,7 @@ export const AppContextProvider = ({
   //loading state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
+  const [products, setProducts] = useState<Product[]>([]);
 
   //get token
   const [token, setToken] = useState<string | null>(
@@ -204,6 +206,8 @@ export const AppContextProvider = ({
     setError,
     allUsers,
     setAllUsers,
+    products,
+    setProducts,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
