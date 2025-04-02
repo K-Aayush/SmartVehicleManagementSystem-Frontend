@@ -1,6 +1,15 @@
 import React from "react";
+import { Product } from "../../lib/types";
 
-const SuggestedProductList = () => {
+interface SuggestedProductListProp {
+  product: Product[];
+  selectedProductId?: string;
+}
+
+const SuggestedProductList = ({
+  product,
+  selectedProductId,
+}: SuggestedProductListProp) => {
   return <div>SuggestedProductList</div>;
 };
 

@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { Product } from "../lib/types";
 import axios from "axios";
+import ProductInfo from "../components/products/ProductInfo";
+import ProductDescription from "../components/products/ProductDescription";
+import SuggestedProductList from "../components/products/SuggestedProductList";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -67,25 +70,39 @@ const ProductDetails = () => {
     }
   }, [productData, fetchProductByCategory]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div className="text-sm text-red-500">{error}</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen text-sm text-red-500">
+        {error}
+      </div>
+    );
 
   return (
-    <div className="min-h-screen px-10 py-8 mx-6 md:py-20 md:px-26 lg:px-36 md:mx-16">
-      <ProductInfo product={productData} />
+    <div className="min-h-screen px-4 py-8 mx-auto max-w-7xl md:px-6 lg:px-8">
+      <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+        <div>
+          <ProductInfo product={productData} />
+        </div>
 
-      <div className="grid grid-cols-4 mt-16">
-        <div className="col-span-4 md:col-span-3">
+        <div>
           <ProductDescription product={productData} />
         </div>
-        <div className="hidden md:block">
-          <SuggestedProductList
-            product={productByCategory.filter(
-              (product) => product.id !== productData?.id
-            )}
-            selectedProductId={productData?.id}
-          />
-        </div>
+      </div>
+
+      <div className="mt-16">
+        <h2 className="mb-6 text-2xl font-bold">You might also like</h2>
+        <SuggestedProductList
+          product={productByCategory.filter(
+            (product) => product.id !== productData?.id
+          )}
+          selectedProductId={productData?.id}
+        />
       </div>
     </div>
   );

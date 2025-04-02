@@ -1,6 +1,11 @@
 import React from "react";
+import { Product } from "../../lib/types";
 
-const ProductInfo = () => {
+interface productDetailsProp {
+  product: Product | null;
+}
+
+const ProductInfo = ({ product }: productDetailsProp) => {
   return <div>ProductInfo</div>;
 };
 
