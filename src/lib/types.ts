@@ -69,3 +69,28 @@ export interface AllUsersState {
   VENDOR: userDataProps[];
   SERVICE_PROVIDER: userDataProps[];
 }
+
+// Define types
+interface ProductImage {
+  id: string;
+  imageUrl: string;
+  productId: string;
+}
+
+interface Vendor {
+  name: string;
+  companyName: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  stock: number;
+  createdAt: string;
+  vendorId: string;
+  images: ProductImage[];
+  Vendor: Vendor;
+}

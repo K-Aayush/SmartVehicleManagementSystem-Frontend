@@ -3,6 +3,7 @@ import { AppContext } from "./AppContext";
 import {
   AllUsersState,
   authResponse,
+  Product,
   tokenCheck,
   userDataProps,
 } from "../lib/types";
@@ -10,6 +11,12 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { registerFormData } from "../lib/validator";
+import { jwtDecode } from "jwt-decode";
+
+interface DecodedToken {
+  id: string;
+  role: string;
+}
 
 export const AppContextProvider = ({
   children,
@@ -22,12 +29,15 @@ export const AppContextProvider = ({
   //loading state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
+  const [products, setProducts] = useState<Product[]>([]);
 
   //get token
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
+
+  const decoded = token ? jwtDecode<DecodedToken>(token) : null;
 
   //get all users states
   const [allUsers, setAllUsers] = useState<AllUsersState>({
@@ -71,10 +81,12 @@ export const AppContextProvider = ({
   };
 
   useEffect(() => {
-    fetchAllUsers("");
-    fetchAllUsers("USER");
-    fetchAllUsers("VENDOR");
-    fetchAllUsers("SERVICE_PROVIDER");
+    if (decoded?.role === "ADMIN") {
+      fetchAllUsers("");
+      fetchAllUsers("USER");
+      fetchAllUsers("VENDOR");
+      fetchAllUsers("SERVICE_PROVIDER");
+    }
   }, []);
 
   useEffect(() => {
@@ -194,6 +206,8 @@ export const AppContextProvider = ({
     setError,
     allUsers,
     setAllUsers,
+    products,
+    setProducts,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

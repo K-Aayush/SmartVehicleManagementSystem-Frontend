@@ -4,11 +4,14 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 
 import { AppContextProvider } from "./context/AppContextProvider.tsx";
+import { CartContextProvider } from "./context/CartContextProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <AppContextProvider>
-      <App />
+      <CartContextProvider>
+        <App />
+      </CartContextProvider>
     </AppContextProvider>
   </BrowserRouter>
 );
