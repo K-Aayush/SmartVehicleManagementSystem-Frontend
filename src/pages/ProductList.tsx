@@ -22,7 +22,7 @@ import { AppContext } from "../context/AppContext";
 // Define types
 interface ProductImage {
   id: string;
-  url: string;
+  imageUrl: string;
   productId: string;
 }
 
@@ -260,7 +260,7 @@ const ProductList = () => {
                   <div className="relative w-full h-48 bg-gray-100">
                     {product.images && product.images.length > 0 ? (
                       <img
-                        src={product.images[0].url}
+                        src={product.images[0].imageUrl}
                         alt={product.name}
                         className="object-cover w-full h-full"
                       />

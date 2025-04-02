@@ -75,7 +75,14 @@ const AddProductForm = () => {
       formData.append("category", productData.category);
       formData.append("price", productData.price.toString());
       formData.append("stock", productData.stock.toString());
-      formData.append("imageUrl", productData.imageUrl);
+
+      if (Array.isArray(productData.imageUrl)) {
+        productData.imageUrl.forEach((image) => {
+          if (image instanceof File) {
+            formData.append("imageUrl", image);
+          }
+        });
+      }
 
       const { data } = await axios.post<vendorProductResponse>(
         backendUrl + "/api/vendor/addProduct",
