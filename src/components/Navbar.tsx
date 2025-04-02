@@ -1,15 +1,23 @@
 import { Link } from "react-router-dom";
 import ProfileHudTop from "./ProfileHudTop";
 import logo from "../assets/vehiclemanagementlogo.svg";
+import { ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <nav className="mx-auto py-3 px-6 flex justify-between border-b-2 shadow-sm">
+    <nav className="flex justify-between px-6 py-3 mx-auto border-b-2 shadow-sm">
       <Link to={"/"} className="flex items-center">
         <img src={logo} alt="Logo" width={200} height={200} />
       </Link>
-
-      <ProfileHudTop />
+      <div className="flex items-center space-x-4">
+        <Link
+          className="p-3 transition-all duration-300 ease-in-out bg-white border rounded-full cursor-pointer dark:bg-gray-800 dark:border-white/20 hover:dark:border-white border-black/40 hover:border-black"
+          to={"/cart"}
+        >
+          <ShoppingCart className="w-4 h-4 " />
+        </Link>
+        <ProfileHudTop />
+      </div>
     </nav>
   );
 };
