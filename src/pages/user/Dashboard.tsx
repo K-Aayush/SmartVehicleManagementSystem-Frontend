@@ -26,7 +26,7 @@ const UserDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/user/orders"}
+              to={"/user/dashboard/orders"}
             >
               <ShoppingBag className="w-5 h-5" />
               <p>My Orders</p>

@@ -29,6 +29,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import UserOrders from "./pages/user/UserOrders";
 
 const App = () => {
   const location = useLocation();
@@ -126,6 +127,7 @@ const App = () => {
           }
         >
           <Route path="" element={<UserDashboardPage />} />
+          <Route path="orders" element={<UserOrders />} />
         </Route>
 
         <Route
