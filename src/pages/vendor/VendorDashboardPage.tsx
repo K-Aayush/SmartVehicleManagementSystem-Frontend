@@ -104,6 +104,7 @@ const VendorDashboardPage = () => {
 
       if (ordersResponse.data.success) {
         setOrders(ordersResponse.data.orders || []);
+        console.log(ordersResponse.data.orders);
       }
 
       // Fetch notifications
