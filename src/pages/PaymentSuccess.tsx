@@ -61,7 +61,7 @@ const PaymentSuccess = () => {
           Thank you for your purchase. Your order has been confirmed.
         </p>
 
-        <div className="p-4 mb-6 text-left rounded-md bg-gray-50">
+        <div className="p-4 mb-6 text-left rounded-md ">
           <div className="flex justify-between mb-2">
             <span className="font-medium">Order ID:</span>
             <span className="font-mono">
@@ -82,9 +82,9 @@ const PaymentSuccess = () => {
           {orderDetails.items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-4 p-3 bg-white border rounded-md"
+              className="flex items-center gap-4 p-3 border rounded-md"
             >
-              <div className="w-12 h-12 overflow-hidden bg-gray-100 rounded-md">
+              <div className="w-12 h-12 overflow-hidden rounded-md">
                 {item.images && item.images.length > 0 ? (
                   <img
                     src={item.images[0].imageUrl || "/placeholder.svg"}
@@ -93,14 +93,14 @@ const PaymentSuccess = () => {
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full">
-                    <ShoppingBag className="w-6 h-6 text-gray-400" />
+                    <ShoppingBag className="w-6 h-6 text-gray-700" />
                   </div>
                 )}
               </div>
 
               <div className="flex-1">
                 <div className="font-medium">{item.name}</div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-700">
                   {item.quantity} × {formatPrice(item.price)}
                 </div>
               </div>

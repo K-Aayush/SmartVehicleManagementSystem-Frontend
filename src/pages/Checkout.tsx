@@ -95,7 +95,6 @@ const CheckoutForm = ({
       setMessage(error.message || "An unexpected error occurred.");
       setLoading(false);
     } else if (paymentIntent) {
-      // Payment succeeded, verify with backend
       try {
         const response = await axios.post(
           `${backendUrl}/api/payment/verify-payment`,
@@ -112,7 +111,6 @@ const CheckoutForm = ({
         );
 
         if (response.data.success) {
-          // Clear cart and redirect to success page
           clearCart();
           navigate("/payment-success");
         } else {
@@ -127,7 +125,7 @@ const CheckoutForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="h-screen space-y-6">
       <PaymentElement />
 
       {message && (
