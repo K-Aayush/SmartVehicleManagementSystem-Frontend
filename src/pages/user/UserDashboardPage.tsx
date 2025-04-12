@@ -343,7 +343,7 @@ const UserDashboardPage = () => {
                           <Badge
                             variant={
                               payment.status === "COMPLETED"
-                                ? "success"
+                                ? "default"
                                 : payment.status === "PENDING"
                                 ? "outline"
                                 : "secondary"
