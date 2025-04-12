@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } =
+  const { cartItems, removeFromCart, updateQuantity, cartTotal } =
     useContext(CartContext);
 
   const { token, backendUrl } = useContext(AppContext);
@@ -35,7 +35,7 @@ const Cart = () => {
         {
           productId: item.id,
           quantity: item.quantity,
-          paymentMethod: "credit",
+          paymentMethod: "CREDIT",
         },
         {
           headers: {

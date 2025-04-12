@@ -10,13 +10,15 @@ import { ShoppingBag, CreditCard, Bell, Package } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import RecentOrdersTable from "../../components/user/RecentOrdersTable";
-import NotificationsList from "../../components/user/NotificationsList";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "../../components/ui/tabs";
+import { Button } from "../../components/ui/button";
+import { Separator } from "../../components/ui/separator";
+import { Badge } from "../../components/ui/badge";
 
 interface Order {
   id: string;
@@ -74,7 +76,7 @@ const UserDashboardPage = () => {
 
       // Fetch notifications
       const notificationsResponse = await axios.get(
-        `${backendUrl}/api/notifications`,
+        `${backendUrl}/api/notification/notifications`,
         {
           headers: { Authorization: token },
         }
@@ -103,6 +105,49 @@ const UserDashboardPage = () => {
     }
   };
 
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/notification/notifications/${notificationId}`,
+        { isRead: true },
+        { headers: { Authorization: token } }
+      );
+
+      if (response.data.success) {
+        setNotifications((prev) =>
+          prev.map((notification) =>
+            notification.id === notificationId
+              ? { ...notification, isRead: true }
+              : notification
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      toast.error("Failed to update notification");
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/notification/notifications/mark-all-read`,
+        {},
+        { headers: { Authorization: token } }
+      );
+
+      if (response.data.success) {
+        setNotifications((prev) =>
+          prev.map((notification) => ({ ...notification, isRead: true }))
+        );
+        toast.success("All notifications marked as read");
+      }
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+      toast.error("Failed to update notifications");
+    }
+  };
+
   // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -113,6 +158,7 @@ const UserDashboardPage = () => {
 
   // Calculate total spent
   const totalSpent = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+  const unreadNotifications = notifications.filter((n) => !n.isRead).length;
 
   return (
     <div className="space-y-6">
@@ -147,9 +193,7 @@ const UserDashboardPage = () => {
             <Bell className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {notifications.filter((n) => !n.isRead).length}
-            </div>
+            <div className="text-2xl font-bold">{unreadNotifications}</div>
             <p className="text-xs text-muted-foreground">
               Unread notifications
             </p>
@@ -175,16 +219,146 @@ const UserDashboardPage = () => {
       <Tabs defaultValue="orders">
         <TabsList>
           <TabsTrigger value="orders">Recent Orders</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          <TabsTrigger value="notifications" className="relative">
+            Notifications
+            {unreadNotifications > 0 && (
+              <Badge variant="destructive" className="ml-2">
+                {unreadNotifications}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="payments">Payment History</TabsTrigger>
         </TabsList>
+
         <TabsContent value="orders" className="p-4 border rounded-md">
           <RecentOrdersTable orders={orders.slice(0, 5)} loading={loading} />
         </TabsContent>
+
         <TabsContent value="notifications" className="p-4 border rounded-md">
-          <NotificationsList
-            notifications={notifications.slice(0, 5)}
-            loading={loading}
-          />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Notifications</h3>
+              {unreadNotifications > 0 && (
+                <Button variant="outline" size="sm" onClick={markAllAsRead}>
+                  Mark All as Read
+                </Button>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="flex items-center justify-center h-40">
+                <div className="w-6 h-6 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <Bell className="w-12 h-12 mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No notifications yet</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {notifications.map((notification, index) => (
+                  <div key={notification.id}>
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`p-2 rounded-full ${
+                          notification.isRead
+                            ? "bg-muted"
+                            : "bg-blue-100 dark:bg-blue-900"
+                        }`}
+                      >
+                        <Bell className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p
+                          className={`${
+                            !notification.isRead ? "font-medium" : ""
+                          }`}
+                        >
+                          {notification.message}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(notification.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                      {!notification.isRead && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleMarkAsRead(notification.id)}
+                          className="text-blue-500"
+                        >
+                          Mark as read
+                        </Button>
+                      )}
+                    </div>
+                    {index < notifications.length - 1 && (
+                      <Separator className="my-4" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="payments" className="p-4 border rounded-md">
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Recent Payments</h3>
+
+            {loading ? (
+              <div className="flex items-center justify-center h-40">
+                <div className="w-6 h-6 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+              </div>
+            ) : payments.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <CreditCard className="w-12 h-12 mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">No payment history yet</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="px-4 py-2 text-left">ID</th>
+                      <th className="px-4 py-2 text-left">Date</th>
+                      <th className="px-4 py-2 text-left">Amount</th>
+                      <th className="px-4 py-2 text-left">Method</th>
+                      <th className="px-4 py-2 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.slice(0, 5).map((payment) => (
+                      <tr key={payment.id} className="border-b">
+                        <td className="px-4 py-2">
+                          {payment.id.slice(0, 8)}...
+                        </td>
+                        <td className="px-4 py-2">
+                          {new Date(payment.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-2">
+                          {formatPrice(payment.amount)}
+                        </td>
+                        <td className="px-4 py-2">{payment.paymentMethod}</td>
+                        <td className="px-4 py-2">
+                          <Badge
+                            variant={
+                              payment.status === "COMPLETED"
+                                ? "success"
+                                : payment.status === "PENDING"
+                                ? "outline"
+                                : "secondary"
+                            }
+                          >
+                            {payment.status}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </TabsContent>
       </Tabs>
     </div>
