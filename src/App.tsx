@@ -30,6 +30,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import UserOrders from "./pages/user/UserOrders";
+import OrderDetails from "./pages/OrderDetails";
 
 const App = () => {
   const location = useLocation();
@@ -85,6 +86,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
         <Route
           path="/register"
           element={

@@ -46,13 +46,15 @@ interface OrderDetails {
     };
   };
   user?: {
-    payment?: {
-      id: string;
-      status: string;
-      paymentMethod: string;
-      amount: number;
-      createdAt: string;
-    };
+    payment?: [
+      {
+        id: string;
+        status: string;
+        paymentMethod: string;
+        amount: number;
+        createdAt: string;
+      }
+    ];
   };
 }
 
@@ -77,6 +79,7 @@ const OrderDetails = () => {
 
       if (data.success) {
         setOrder(data.order);
+        console.log(data.order.user.payment[0].status);
       } else {
         toast.error("Failed to load order details");
       }
@@ -187,7 +190,7 @@ const OrderDetails = () => {
             permission to view it.
           </p>
           <Button asChild>
-            <Link to="/user/orders">
+            <Link to="/user/dashboard/orders">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Orders
             </Link>
@@ -198,13 +201,15 @@ const OrderDetails = () => {
   }
 
   const statusInfo = getStatusBadge(order.status);
-  const paymentInfo = getPaymentBadge(order.user?.payment?.status);
+  const paymentInfo = order.user?.payment
+    ? getPaymentBadge(order.user?.payment[0].status)
+    : undefined;
 
   return (
     <div className="container max-w-4xl px-4 py-8 mx-auto">
       <div className="flex items-center justify-between mb-6">
         <Button variant="outline" size="sm" asChild>
-          <Link to="/user/orders">
+          <Link to="/user/dashboard/orders">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Orders
           </Link>
@@ -229,9 +234,7 @@ const OrderDetails = () => {
                 <div className="w-full h-24 overflow-hidden bg-gray-100 rounded-md sm:w-24">
                   {order.product.images && order.product.images.length > 0 ? (
                     <img
-                      src={
-                        order.product.images[0].imageUrl || "/placeholder.svg"
-                      }
+                      src={order.product.images[0].imageUrl}
                       alt={order.product.name}
                       className="object-cover w-full h-full"
                     />
@@ -295,9 +298,11 @@ const OrderDetails = () => {
                     <div className="absolute left-[-30px] flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-green-600">
                       <CheckCircle className="w-3 h-3" />
                     </div>
-                    <h3 className="font-medium">Payment {paymentInfo.label}</h3>
+                    <h3 className="font-medium">
+                      Payment {paymentInfo?.label}
+                    </h3>
                     <p className="text-sm text-gray-500">
-                      {formatDate(order.user?.payment.createdAt)}
+                      {formatDate(order.user?.payment[0].createdAt)}
                     </p>
                   </div>
                 )}
@@ -363,7 +368,9 @@ const OrderDetails = () => {
                   Payment Method
                 </h3>
                 <p className="capitalize">
-                  {order.user?.payment?.paymentMethod || "Credit Card"}
+                  {order.user?.payment
+                    ? order.user?.payment[0].paymentMethod
+                    : "Credit card"}
                 </p>
               </div>
 
@@ -371,8 +378,8 @@ const OrderDetails = () => {
                 <h3 className="text-sm font-medium text-gray-500">
                   Payment Status
                 </h3>
-                <Badge variant={paymentInfo.variant} className="mt-1">
-                  {paymentInfo.label}
+                <Badge variant={paymentInfo?.variant} className="mt-1">
+                  {paymentInfo?.label}
                 </Badge>
               </div>
 
