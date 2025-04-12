@@ -10,7 +10,6 @@ import {
   UserRound,
   View,
 } from "lucide-react";
-import { CgProfile } from "react-icons/cg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,7 +71,16 @@ export default function ProfileHudTop() {
           ) : (
             <>
               {userData?.role === "USER" && (
-                <Link to={"/user/Dashboard"}>
+                <Link to={"/user/dashboard"}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <LayoutDashboard className="mr-2 size-4" />
+                    Dashboard
+                  </DropdownMenuItem>
+                </Link>
+              )}
+
+              {userData?.role === "VENDOR" && (
+                <Link to={"/vendor/dashboard"}>
                   <DropdownMenuItem className="cursor-pointer">
                     <LayoutDashboard className="mr-2 size-4" />
                     Dashboard
