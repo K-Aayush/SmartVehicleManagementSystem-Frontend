@@ -259,7 +259,6 @@ const VendorDashboardPage = () => {
     try {
       const response = await axios.put(
         `${backendUrl}/api/notification/notifications/mark-all-read`,
-        {},
         { headers: { Authorization: token } }
       );
 
