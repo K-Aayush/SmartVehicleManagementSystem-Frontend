@@ -27,6 +27,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductList from "./pages/ProductList";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import UserOrders from "./pages/user/UserOrders";
+import OrderDetails from "./pages/OrderDetails";
 
 const App = () => {
   const location = useLocation();
@@ -80,6 +84,9 @@ const App = () => {
         <Route path="/products" element={<ProductList />} />
         <Route path="/productDetails/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/orders/:id" element={<OrderDetails />} />
         <Route
           path="/register"
           element={
@@ -122,6 +129,7 @@ const App = () => {
           }
         >
           <Route path="" element={<UserDashboardPage />} />
+          <Route path="orders" element={<UserOrders />} />
         </Route>
 
         <Route

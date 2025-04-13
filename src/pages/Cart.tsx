@@ -3,25 +3,73 @@ import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "../components/ui/separator";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } =
     useContext(CartContext);
 
-  const { token } = useContext(AppContext);
+  const { token, backendUrl } = useContext(AppContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   // Handle checkout
-  const onCheckout = () => {
+  const onCheckout = async () => {
     if (!token) {
-      alert("Please login to checkout your cart products");
+      toast.error("Please login to checkout your cart products");
       navigate("/login");
       return;
     }
-    console.log("Checked");
+
+    try {
+      setLoading(true);
+
+      const item = cartItems[0];
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/payment/create-payment`,
+        {
+          productId: item.id,
+          quantity: item.quantity,
+          paymentMethod: "CREDIT",
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (data.success) {
+        localStorage.setItem(
+          "currentOrder",
+          JSON.stringify({
+            orderId: data.orderId,
+            paymentId: data.paymentId,
+            items: cartItems,
+            total: cartTotal,
+          })
+        );
+
+        // Redirect to checkout page with client secret
+        navigate(
+          `/checkout?clientSecret=${data.clientSecret}&paymentId=${data.paymentId}&orderId=${data.orderId}`
+        );
+      } else {
+        toast.error("Failed to create payment");
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast.error("An error occurred during checkout");
+    } finally {
+      setLoading(false);
+    }
   };
+
   // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -175,8 +223,15 @@ const Cart = () => {
               </span>
             </div>
 
-            <Button onClick={onCheckout} className="w-full">
-              Proceed to Checkout
+            <Button onClick={onCheckout} className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Proceed to Checkout"
+              )}
             </Button>
           </div>
         </div>
