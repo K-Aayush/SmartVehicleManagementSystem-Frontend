@@ -31,6 +31,8 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import UserOrders from "./pages/user/UserOrders";
 import OrderDetails from "./pages/OrderDetails";
+import Chat from "./pages/Chat";
+import EmergencyService from "./pages/user/EmergencyService";
 
 const App = () => {
   const location = useLocation();
@@ -130,6 +132,8 @@ const App = () => {
         >
           <Route path="" element={<UserDashboardPage />} />
           <Route path="orders" element={<UserOrders />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="emergency" element={<EmergencyService />} />
         </Route>
 
         <Route
