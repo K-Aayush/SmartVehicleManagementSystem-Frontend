@@ -104,6 +104,8 @@ const ChatWindow = ({
       message: newMessage.trim(),
     });
 
+    console.log(newMessage);
+
     setNewMessage("");
   };
 
