@@ -31,14 +31,16 @@ interface Product {
   images?: { imageUrl: string }[];
 }
 
+type EditProduct = Partial<Omit<Product, "images">> & {
+  images?: FileList;
+};
+
 const ManageProducts = () => {
   const { backendUrl, token } = useContext(AppContext);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState<
-    Partial<Product> & { images?: FileList }
-  >({});
+  const [editValues, setEditValues] = useState<EditProduct>({});
 
   useEffect(() => {
     fetchProducts();
@@ -74,6 +76,9 @@ const ManageProducts = () => {
   const handleSave = async (productId: string) => {
     try {
       const formData = new FormData();
+
+      // Add the product ID to the form data
+      formData.append("productId", productId);
 
       // Append text fields
       if (editValues.name) formData.append("name", editValues.name);
@@ -136,12 +141,11 @@ const ManageProducts = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setEditValues((prev) => ({
-        ...prev,
-        images: e.target.files,
-      }));
-    }
+    const files = e.target.files;
+    setEditValues((prev) => ({
+      ...prev,
+      images: files && files.length > 0 ? files : undefined,
+    }));
   };
 
   if (loading) {
