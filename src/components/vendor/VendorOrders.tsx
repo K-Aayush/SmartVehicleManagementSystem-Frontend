@@ -120,7 +120,7 @@ const VendorOrders = ({ orders, onUpdateStatus }: VendorOrdersProps) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="PROCESSING">Processing</SelectItem>
-                      <SelectItem value="SHIPPED">Shiffed</SelectItem>
+                      <SelectItem value="SHIPPED">Shipped</SelectItem>
                       <SelectItem value="DELIVERED">Delivered</SelectItem>
                       <SelectItem value="COMPLETED">Completed</SelectItem>
                     </SelectContent>
