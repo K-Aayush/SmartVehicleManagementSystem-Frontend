@@ -68,7 +68,7 @@ interface DashboardStats {
 }
 
 const VendorDashboardPage = () => {
-  const { backendUrl, token } = useContext(AppContext);
+  const { backendUrl, token, userData } = useContext(AppContext);
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -77,9 +77,9 @@ const VendorDashboardPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !userData) return;
     fetchDashboardData();
-  }, [backendUrl, token]);
+  }, [backendUrl, token, userData]);
 
   const fetchDashboardData = async () => {
     try {
@@ -94,17 +94,24 @@ const VendorDashboardPage = () => {
       );
 
       if (productsResponse.data.success) {
-        setProducts(productsResponse.data.products || []);
-      }
+        const vendorProducts = productsResponse.data.products || [];
+        setProducts(vendorProducts);
 
-      // Fetch orders
-      const ordersResponse = await axios.get(`${backendUrl}/api/order/orders`, {
-        headers: { Authorization: token },
-      });
+        // Fetch all orders and filter for vendor's products
+        const ordersResponse = await axios.get(
+          `${backendUrl}/api/order/vendor-orders`,
+          {
+            headers: { Authorization: token },
+          }
+        );
 
-      if (ordersResponse.data.success) {
-        setOrders(ordersResponse.data.orders || []);
-        console.log(ordersResponse.data.orders);
+        if (ordersResponse.data.success) {
+          const vendorOrders = ordersResponse.data.orders || [];
+          setOrders(vendorOrders);
+
+          // Calculate stats with the fetched orders
+          calculateStats(vendorProducts, vendorOrders);
+        }
       }
 
       // Fetch notifications
@@ -118,12 +125,6 @@ const VendorDashboardPage = () => {
       if (notificationsResponse.data.success) {
         setNotifications(notificationsResponse.data.notifications || []);
       }
-
-      // Calculate stats
-      calculateStats(
-        productsResponse.data.products || [],
-        ordersResponse.data.orders || []
-      );
     } catch (error: any) {
       console.error("Error fetching dashboard data:", error);
       toast.error(
@@ -208,7 +209,7 @@ const VendorDashboardPage = () => {
     try {
       const response = await axios.put(
         `${backendUrl}/api/vendor/updateOrderStatus`,
-        { status },
+        { orderId, status },
         { headers: { Authorization: token } }
       );
 
@@ -259,6 +260,7 @@ const VendorDashboardPage = () => {
     try {
       const response = await axios.put(
         `${backendUrl}/api/notification/notifications/mark-all-read`,
+        {},
         { headers: { Authorization: token } }
       );
 

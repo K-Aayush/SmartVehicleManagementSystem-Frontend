@@ -104,12 +104,12 @@ const VendorOrders = ({ orders, onUpdateStatus }: VendorOrdersProps) => {
                       order.status === "COMPLETED" ? "default" : "outline"
                     }
                   >
-                    {order.status || "Processing"}
+                    {order.status || "PROCESSING"}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <Select
-                    defaultValue={order.status || "PENDING"}
+                    defaultValue={order.status || "PROCESSING"}
                     onValueChange={(value) =>
                       handleStatusChange(order.id, value)
                     }
@@ -119,8 +119,9 @@ const VendorOrders = ({ orders, onUpdateStatus }: VendorOrdersProps) => {
                       <SelectValue placeholder="Update status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="PENDING">Pending</SelectItem>
-                      <SelectItem value="INPROGRESS">In Progress</SelectItem>
+                      <SelectItem value="PROCESSING">Processing</SelectItem>
+                      <SelectItem value="SHIPPED">Shiffed</SelectItem>
+                      <SelectItem value="DELIVERED">Delivered</SelectItem>
                       <SelectItem value="COMPLETED">Completed</SelectItem>
                     </SelectContent>
                   </Select>

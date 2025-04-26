@@ -95,18 +95,34 @@ const ChatWindow = ({
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!socket || !newMessage.trim() || !userData) return;
 
-    socket.emit("private_message", {
+    const messageData = {
       senderId: userData.id,
       receiverId,
       message: newMessage.trim(),
-    });
+    };
 
-    console.log(newMessage);
+    // Optimistically add message to UI
+    const optimisticMessage: Message = {
+      id: Date.now().toString(),
+      ...messageData,
+      createdAt: new Date().toISOString(),
+      isRead: false,
+      sender: {
+        id: userData.id,
+        name: userData.name,
+        profileImage: userData.profileImage || null,
+      },
+    };
 
+    setMessages((prev) => [...prev, optimisticMessage]);
     setNewMessage("");
+    scrollToBottom();
+
+    // Emit message to server
+    socket.emit("private_message", messageData);
   };
 
   const handleTyping = () => {
@@ -124,7 +140,9 @@ const ChatWindow = ({
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   if (loading) {
