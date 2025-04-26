@@ -26,15 +26,40 @@ const EmergencyService = () => {
 
     try {
       setRequesting(true);
+
+      // Mock data for testing - replace with actual vehicle selection
+      const emergencyData = {
+        vehicleId: "test-vehicle-id", 
+        assistanceType: "MECHANIC", 
+        description: "Emergency mechanical assistance needed",
+        latitude: 0, 
+        longitude: 0,
+      };
+
+      // Get current location
+      const position = await new Promise<GeolocationPosition>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
+      );
+
+      emergencyData.latitude = position.coords.latitude;
+      emergencyData.longitude = position.coords.longitude;
+
       const response = await axios.post(
         `${backendUrl}/api/emergency/request`,
-        { providerId },
+        emergencyData,
         { headers: { Authorization: token } }
       );
 
       if (response.data.success) {
         toast.success("Emergency service requested successfully");
-        navigate(`/chat?userId=${providerId}`);
+        if (response.data.nearbyProviders > 0) {
+          toast.success(
+            `${response.data.nearbyProviders} service providers notified`
+          );
+        }
+        navigate(`/user/dashboard/chat`);
       }
     } catch (error) {
       console.error("Error requesting emergency service:", error);

@@ -25,11 +25,7 @@ interface ChatListProps {
   selectedUserId?: string;
 }
 
-const ChatList = ({
-  role = "VENDOR",
-  onSelectUser,
-  selectedUserId,
-}: ChatListProps) => {
+const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
   const { token, backendUrl } = useContext(AppContext);
   const [users, setUsers] = useState<ChatUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +44,7 @@ const ChatList = ({
       });
 
       if (response.data.success) {
+        console.log(response.data.conversations);
         // Transform the conversations data to match the expected format
         const formattedUsers = response.data.conversations.map((conv: any) => ({
           id: conv.otherUser.id,
@@ -96,14 +93,16 @@ const ChatList = ({
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage src={user.profileImage} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                    <AvatarFallback>{user.name}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{user.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {user.role === "SERVICE_PROVIDER"
                         ? "Service Provider"
-                        : "Vendor"}
+                        : user.role === "VENDOR"
+                        ? "Vendor"
+                        : "User"}
                     </p>
                     {user.companyName && (
                       <p className="text-sm truncate text-muted-foreground">
