@@ -11,7 +11,7 @@ import {
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Save, Trash2, X } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -27,7 +27,7 @@ interface Vehicle {
   model: string;
   year: number;
   vin: string;
-  image?: string;
+  image?: string | File;
 }
 
 const VehicleManagement = () => {
@@ -42,7 +42,9 @@ const VehicleManagement = () => {
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [editingVehicle, setEditingVehicle] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState<Partial<Vehicle>>({});
+  const [editValues, setEditValues] = useState<
+    Partial<Vehicle & { image?: File }>
+  >({});
 
   useEffect(() => {
     fetchVehicles();
@@ -101,12 +103,33 @@ const VehicleManagement = () => {
     }
   };
 
+  const handleEdit = (vehicle: Vehicle) => {
+    setEditingVehicle(vehicle.id);
+    setEditValues({
+      brand: vehicle.brand,
+      model: vehicle.model,
+      year: vehicle.year,
+      vin: vehicle.vin,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingVehicle(null);
+    setEditValues({});
+  };
+
   const handleUpdateVehicle = async (vehicleId: string) => {
     try {
       const formData = new FormData();
       Object.entries(editValues).forEach(([key, value]) => {
-        if (value) formData.append(key, value.toString());
+        if (value && key !== "image") {
+          formData.append(key, value.toString());
+        }
       });
+
+      if (editValues.image) {
+        formData.append("image", editValues.image);
+      }
 
       const response = await axios.put(
         `${backendUrl}/api/vehicle/${vehicleId}`,
@@ -121,8 +144,7 @@ const VehicleManagement = () => {
 
       if (response.data.success) {
         toast.success("Vehicle updated successfully");
-        setEditingVehicle(null);
-        setEditValues({});
+        handleCancelEdit();
         fetchVehicles();
       }
     } catch (error) {
@@ -150,6 +172,13 @@ const VehicleManagement = () => {
     } catch (error) {
       console.error("Error deleting vehicle:", error);
       toast.error("Failed to delete vehicle");
+    }
+  };
+
+  const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEditValues((prev) => ({ ...prev, image: file }));
     }
   };
 
@@ -258,7 +287,11 @@ const VehicleManagement = () => {
                     <div className="w-16 h-16 overflow-hidden rounded-md">
                       {vehicle.image ? (
                         <img
-                          src={vehicle.image}
+                          src={
+                            typeof vehicle.image === "string"
+                              ? vehicle.image
+                              : URL.createObjectURL(vehicle.image)
+                          }
                           alt={`${vehicle.brand} ${vehicle.model}`}
                           className="object-cover w-full h-full"
                         />
@@ -269,26 +302,107 @@ const VehicleManagement = () => {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>{vehicle.brand}</TableCell>
-                  <TableCell>{vehicle.model}</TableCell>
-                  <TableCell>{vehicle.year}</TableCell>
-                  <TableCell>{vehicle.vin}</TableCell>
+                  <TableCell>
+                    {editingVehicle === vehicle.id ? (
+                      <Input
+                        value={editValues.brand}
+                        onChange={(e) =>
+                          setEditValues({
+                            ...editValues,
+                            brand: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      vehicle.brand
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingVehicle === vehicle.id ? (
+                      <Input
+                        value={editValues.model}
+                        onChange={(e) =>
+                          setEditValues({
+                            ...editValues,
+                            model: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      vehicle.model
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingVehicle === vehicle.id ? (
+                      <Input
+                        type="number"
+                        value={editValues.year}
+                        onChange={(e) =>
+                          setEditValues({
+                            ...editValues,
+                            year: parseInt(e.target.value),
+                          })
+                        }
+                      />
+                    ) : (
+                      vehicle.year
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingVehicle === vehicle.id ? (
+                      <Input
+                        value={editValues.vin}
+                        onChange={(e) =>
+                          setEditValues({ ...editValues, vin: e.target.value })
+                        }
+                      />
+                    ) : (
+                      vehicle.vin
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingVehicle(vehicle.id)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteVehicle(vehicle.id)}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
+                      {editingVehicle === vehicle.id ? (
+                        <>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleEditImageChange}
+                            className="w-32"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleUpdateVehicle(vehicle.id)}
+                          >
+                            <Save className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancelEdit}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEdit(vehicle)}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteVehicle(vehicle.id)}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
