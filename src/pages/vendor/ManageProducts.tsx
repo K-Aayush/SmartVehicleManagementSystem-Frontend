@@ -12,13 +12,14 @@ import {
 } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { Loader2, Pencil, Save, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Save, Trash2, Upload } from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+import { Label } from "../../components/ui/label";
 
 interface Product {
   id: string;
@@ -35,7 +36,9 @@ const ManageProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState<Partial<Product>>({});
+  const [editValues, setEditValues] = useState<
+    Partial<Product> & { images?: FileList }
+  >({});
 
   useEffect(() => {
     fetchProducts();
@@ -70,19 +73,36 @@ const ManageProducts = () => {
 
   const handleSave = async (productId: string) => {
     try {
+      const formData = new FormData();
+
+      // Append text fields
+      if (editValues.name) formData.append("name", editValues.name);
+      if (editValues.price)
+        formData.append("price", editValues.price.toString());
+      if (editValues.stock)
+        formData.append("stock", editValues.stock.toString());
+
+      // Append images if any
+      if (editValues.images) {
+        Array.from(editValues.images).forEach((file) => {
+          formData.append("imageUrl", file);
+        });
+      }
+
       const response = await axios.put(
-        `${backendUrl}/api/vendor/updateProduct/${productId}`,
-        editValues,
+        `${backendUrl}/api/vendor/updateProduct`,
+        formData,
         {
-          headers: { Authorization: token },
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
       if (response.data.success) {
         toast.success("Product updated successfully");
-        setProducts((prev) =>
-          prev.map((p) => (p.id === productId ? { ...p, ...editValues } : p))
-        );
+        await fetchProducts(); // Refresh products to get updated images
         setEditingProduct(null);
         setEditValues({});
       }
@@ -115,6 +135,15 @@ const ManageProducts = () => {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setEditValues((prev) => ({
+        ...prev,
+        images: e.target.files,
+      }));
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -144,19 +173,62 @@ const ManageProducts = () => {
             {products.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
-                  <div className="w-16 h-16 overflow-hidden rounded-md">
-                    {product.images && product.images[0] ? (
-                      <img
-                        src={product.images[0].imageUrl}
-                        alt={product.name}
-                        className="object-cover w-full h-full"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center w-full h-full bg-gray-100">
-                        No image
+                  {editingProduct === product.id ? (
+                    <div className="space-y-2">
+                      <div className="w-16 h-16 overflow-hidden rounded-md">
+                        {editValues.images ? (
+                          <img
+                            src={URL.createObjectURL(editValues.images[0])}
+                            alt="Preview"
+                            className="object-cover w-full h-full"
+                          />
+                        ) : product.images && product.images[0] ? (
+                          <img
+                            src={product.images[0].imageUrl}
+                            alt={product.name}
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full bg-gray-100">
+                            No image
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                      <div>
+                        <Label
+                          htmlFor={`image-${product.id}`}
+                          className="cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2 text-sm text-blue-500">
+                            <Upload className="w-4 h-4" />
+                            Change Image
+                          </div>
+                        </Label>
+                        <Input
+                          id={`image-${product.id}`}
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          multiple
+                          onChange={handleImageChange}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 overflow-hidden rounded-md">
+                      {product.images && product.images[0] ? (
+                        <img
+                          src={product.images[0].imageUrl}
+                          alt={product.name}
+                          className="object-cover w-full h-full"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center w-full h-full bg-gray-100">
+                          No image
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell>
                   {editingProduct === product.id ? (
