@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import ChatList from "../components/chat/ChatList";
-import ChatWindow from "../components/chat/ChatWindow";
+import ChatList from "../../components/chat/ChatList";
+import ChatWindow from "../../components/chat/ChatWindow";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "../components/ui/tabs";
+} from "../../components/ui/tabs";
 
 interface ChatUser {
   id: string;
