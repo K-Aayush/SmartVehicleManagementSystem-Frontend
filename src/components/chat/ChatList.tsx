@@ -20,12 +20,16 @@ interface ChatUser {
 }
 
 interface ChatListProps {
-  role: string;
+  role?: string;
   onSelectUser: (user: ChatUser) => void;
   selectedUserId?: string;
 }
 
-const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
+const ChatList = ({
+  role = "VENDOR",
+  onSelectUser,
+  selectedUserId,
+}: ChatListProps) => {
   const { token, backendUrl } = useContext(AppContext);
   const [users, setUsers] = useState<ChatUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +48,19 @@ const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
       });
 
       if (response.data.success) {
-        setUsers(response.data.conversations);
+        // Transform the conversations data to match the expected format
+        const formattedUsers = response.data.conversations.map((conv: any) => ({
+          id: conv.otherUser.id,
+          name: conv.otherUser.name,
+          profileImage: conv.otherUser.profileImage,
+          role: conv.otherUser.role,
+          companyName: conv.otherUser.companyName,
+          lastMessage: {
+            message: conv.message,
+            createdAt: conv.createdAt,
+          },
+        }));
+        setUsers(formattedUsers);
       }
     } catch (error) {
       console.error("Error fetching chat users:", error);
@@ -84,6 +100,11 @@ const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{user.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.role === "SERVICE_PROVIDER"
+                        ? "Service Provider"
+                        : "Vendor"}
+                    </p>
                     {user.companyName && (
                       <p className="text-sm truncate text-muted-foreground">
                         {user.companyName}
@@ -109,7 +130,8 @@ const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
           ))}
           {users.length === 0 && (
             <p className="text-center text-muted-foreground">
-              No conversations found
+              No conversations found. Start a conversation by purchasing a
+              product or requesting emergency assistance.
             </p>
           )}
         </div>
