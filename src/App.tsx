@@ -31,8 +31,10 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import UserOrders from "./pages/user/UserOrders";
 import OrderDetails from "./pages/OrderDetails";
-import Chat from "./pages/Chat";
+import Chat from "./pages/user/Chat";
 import EmergencyService from "./pages/user/EmergencyService";
+import ManageProducts from "./pages/vendor/ManageProducts";
+import VendorChat from "./pages/vendor/VendorChat";
 
 const App = () => {
   const location = useLocation();
@@ -146,6 +148,8 @@ const App = () => {
         >
           <Route path="dashboard" element={<VendorDashboardPage />} />
           <Route path="addProduct" element={<AddProduct />} />
+          <Route path="manageProducts" element={<ManageProducts />} />
+          <Route path="chat" element={<VendorChat />} />
         </Route>
 
         <Route
