@@ -35,6 +35,8 @@ import Chat from "./pages/user/Chat";
 import EmergencyService from "./pages/user/EmergencyService";
 import ManageProducts from "./pages/vendor/ManageProducts";
 import VendorChat from "./pages/vendor/VendorChat";
+import VehicleManagement from "./pages/service-provider/VehicleManagement";
+import ServiceProviderChat from "./pages/service-provider/ServiceProvicerChat";
 
 const App = () => {
   const location = useLocation();
@@ -153,14 +155,16 @@ const App = () => {
         </Route>
 
         <Route
-          path="/service-provider/dashboard"
+          path="/service-provider"
           element={
             <ProtectedRoutes requiredRole="SERVICE_PROVIDER">
               <ServiceProviderDashboard />
             </ProtectedRoutes>
           }
         >
-          <Route path="" element={<ServiceProviderDashboardPage />} />
+          <Route path="dashboard" element={<ServiceProviderDashboardPage />} />
+          <Route path="vehicles" element={<VehicleManagement />} />
+          <Route path="chat" element={<ServiceProviderChat />} />
         </Route>
 
         <Route

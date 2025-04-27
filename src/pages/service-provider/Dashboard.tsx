@@ -1,13 +1,10 @@
-import { Home, LayoutDashboard, SquarePlus } from "lucide-react";
-// import logo from "../assets/Logo.svg";
-
+import { LayoutDashboard, Car, MessageSquare } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 const ServiceProviderDashboard = () => {
   return (
     <div className="min-h-screen">
       <div className="flex items-start overflow-y-auto">
-        {/*sidebar for requiter pannel*/}
         <div className="inline-block min-h-screen border-r-2">
           <ul className="flex flex-col items-start pt-5 text-gray-800 dark:text-gray-300">
             <NavLink
@@ -17,6 +14,7 @@ const ServiceProviderDashboard = () => {
                 }`
               }
               to={"/service-provider/dashboard"}
+              end
             >
               <LayoutDashboard />
               <p>Dashboard</p>
@@ -27,10 +25,10 @@ const ServiceProviderDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/service-provider/add-service"}
+              to={"/service-provider/vehicles"}
             >
-              <SquarePlus />
-              <p>Add Product</p>
+              <Car />
+              <p>Manage Vehicles</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>
@@ -38,15 +36,15 @@ const ServiceProviderDashboard = () => {
                   isActive && "bg-gray-700 border-r-4 border-primary"
                 }`
               }
-              to={"/service-provider/manage-service"}
+              to={"/service-provider/chat"}
             >
-              <Home />
-              <p>Manage Product</p>
+              <MessageSquare />
+              <p>Messages</p>
             </NavLink>
           </ul>
         </div>
 
-        <div className="pt-5 ml-5">
+        <div className="flex-1 pt-5 ml-5">
           <Outlet />
         </div>
       </div>
