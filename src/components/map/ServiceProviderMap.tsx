@@ -11,9 +11,28 @@ interface Location {
   longitude: number;
 }
 
+interface EmergencyRequest {
+  id: string;
+  userId: string;
+  latitude: number;
+  longitude: number;
+  user: {
+    name: string;
+  };
+  vehicle: {
+    brand: string;
+    model: string;
+    year: number;
+  };
+  distance?: number;
+}
+
 const ServiceProviderMap = () => {
   const { backendUrl, token, userData } = useContext(AppContext);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
+  const [emergencyRequests, setEmergencyRequests] = useState<
+    EmergencyRequest[]
+  >([]);
 
   useEffect(() => {
     if (!token || !userData) return;
@@ -42,6 +61,19 @@ const ServiceProviderMap = () => {
                 userId: userData.id,
                 ...location,
               });
+
+              // Fetch nearby emergency requests
+              const response = await axios.get(
+                `${backendUrl}/api/emergency/nearby-requests`,
+                {
+                  params: { ...location, radius: 10 },
+                  headers: { Authorization: token },
+                }
+              );
+
+              if (response.data.success) {
+                setEmergencyRequests(response.data.requests);
+              }
             } catch (error) {
               console.error("Error updating location:", error);
             }
@@ -59,6 +91,11 @@ const ServiceProviderMap = () => {
     };
 
     startLocationTracking();
+
+    // Listen for new emergency requests
+    socket.on("new_emergency_request", (request: EmergencyRequest) => {
+      setEmergencyRequests((prev) => [...prev, request]);
+    });
 
     return () => {
       if (watchId) {
@@ -79,19 +116,27 @@ const ServiceProviderMap = () => {
   }
 
   return (
-    <Card className="p-4">
-      <LocationMap
-        center={currentLocation}
-        markers={[
-          {
-            position: currentLocation,
-            title: "Your Location",
-            description: "You are here",
+    <LocationMap
+      center={currentLocation}
+      markers={[
+        {
+          position: currentLocation,
+          title: "Your Location",
+          description: "You are here",
+        },
+        ...emergencyRequests.map((request) => ({
+          position: {
+            latitude: request.latitude,
+            longitude: request.longitude,
           },
-        ]}
-        showCurrentLocation
-      />
-    </Card>
+          title: `Emergency: ${request.user.name}`,
+          description: `${request.vehicle.year} ${request.vehicle.brand} ${
+            request.vehicle.model
+          } - ${request.distance?.toFixed(2)}km away`,
+        })),
+      ]}
+      showCurrentLocation
+    />
   );
 };
 

@@ -17,6 +17,8 @@ interface ServiceProvider {
   name: string;
   location: Location;
   distance: number;
+  isAvailable: boolean;
+  lastSeen?: string;
 }
 
 const EmergencyMap = () => {
@@ -106,6 +108,8 @@ const EmergencyMap = () => {
 
       if (response.data.success) {
         toast.success("Emergency assistance requested");
+        // Redirect to chat with the provider
+        window.location.href = `/user/dashboard/chat?type=service-providers&userId=${selectedProvider}`;
       }
     } catch (error) {
       console.log(error);
@@ -139,7 +143,9 @@ const EmergencyMap = () => {
             ...providers.map((provider) => ({
               position: provider.location,
               title: provider.name,
-              description: `${provider.distance.toFixed(2)}km away`,
+              description: `${provider.distance.toFixed(2)}km away${
+                provider.isAvailable ? " - Available" : ""
+              }`,
             })),
           ]}
           showCurrentLocation
@@ -149,27 +155,42 @@ const EmergencyMap = () => {
       <Card className="p-4">
         <h3 className="mb-4 text-lg font-semibold">Nearby Service Providers</h3>
         <div className="space-y-2">
-          {providers.map((provider) => (
-            <div
-              key={provider.id}
-              className="flex items-center justify-between p-3 border rounded-lg"
-            >
-              <div>
-                <p className="font-medium">{provider.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {provider.distance.toFixed(2)}km away
-                </p>
-              </div>
-              <Button
-                variant={
-                  selectedProvider === provider.id ? "default" : "outline"
-                }
-                onClick={() => setSelectedProvider(provider.id)}
+          {providers.length === 0 ? (
+            <p className="text-center text-muted-foreground">
+              No service providers found nearby. Please try again later.
+            </p>
+          ) : (
+            providers.map((provider) => (
+              <div
+                key={provider.id}
+                className="flex items-center justify-between p-3 border rounded-lg"
               >
-                Select
-              </Button>
-            </div>
-          ))}
+                <div>
+                  <p className="font-medium">{provider.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {provider.distance.toFixed(2)}km away
+                    {provider.isAvailable ? (
+                      <span className="ml-2 text-green-500">• Available</span>
+                    ) : (
+                      <span className="ml-2 text-gray-500">
+                        • Last seen{" "}
+                        {new Date(provider.lastSeen || "").toLocaleTimeString()}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <Button
+                  variant={
+                    selectedProvider === provider.id ? "default" : "outline"
+                  }
+                  onClick={() => setSelectedProvider(provider.id)}
+                  disabled={!provider.isAvailable}
+                >
+                  Select
+                </Button>
+              </div>
+            ))
+          )}
         </div>
 
         {selectedProvider && (

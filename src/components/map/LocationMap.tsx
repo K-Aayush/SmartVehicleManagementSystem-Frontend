@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  useMap,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { toast } from "sonner";
@@ -30,6 +37,7 @@ interface LocationMapProps {
   onLocationUpdate?: (location: Location) => void;
   showCurrentLocation?: boolean;
   zoom?: number;
+  showRoute?: boolean;
 }
 
 // Component to handle map center updates
@@ -47,6 +55,7 @@ const LocationMap = ({
   onLocationUpdate,
   showCurrentLocation = false,
   zoom = 13,
+  showRoute = true,
 }: LocationMapProps) => {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
 
@@ -69,6 +78,25 @@ const LocationMap = ({
       );
     }
   }, [showCurrentLocation, onLocationUpdate]);
+
+  // Create route lines between current location and markers
+  const getRouteLines = () => {
+    if (!currentLocation || !showRoute) return null;
+
+    return markers.map((marker, index) => (
+      <Polyline
+        key={index}
+        positions={[
+          [currentLocation.latitude, currentLocation.longitude],
+          [marker.position.latitude, marker.position.longitude],
+        ]}
+        color="blue"
+        weight={3}
+        opacity={0.5}
+        dashArray="10"
+      />
+    ));
+  };
 
   return (
     <MapContainer
@@ -103,6 +131,7 @@ const LocationMap = ({
         </Marker>
       ))}
 
+      {getRouteLines()}
       <MapUpdater center={center} />
     </MapContainer>
   );
