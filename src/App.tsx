@@ -36,6 +36,7 @@ import EmergencyService from "./pages/user/EmergencyService";
 import ManageProducts from "./pages/vendor/ManageProducts";
 import VendorChat from "./pages/vendor/VendorChat";
 import VehicleManagement from "./pages/service-provider/VehicleManagement";
+import ServiceProviderChat from "./pages/service-provider/ServiceProvicerChat";
 
 const App = () => {
   const location = useLocation();
@@ -163,6 +164,7 @@ const App = () => {
         >
           <Route path="dashboard" element={<ServiceProviderDashboardPage />} />
           <Route path="vehicles" element={<VehicleManagement />} />
+          <Route path="chat" element={<ServiceProviderChat />} />
         </Route>
 
         <Route
