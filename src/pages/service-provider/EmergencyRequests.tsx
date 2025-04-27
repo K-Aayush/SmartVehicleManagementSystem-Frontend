@@ -10,7 +10,6 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { toast } from "sonner";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -147,56 +146,70 @@ const EmergencyRequests = () => {
           <CardTitle>All Emergency Requests</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredRequests.map((request) => (
-              <div key={request.id} className="p-4 space-y-2 border rounded-lg">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">
-                    {request.user.name} - {request.assistanceType}
-                  </h3>
-                  <Badge>{request.status}</Badge>
-                </div>
-                <p>
-                  Vehicle: {request.vehicle.year} {request.vehicle.brand}{" "}
-                  {request.vehicle.model}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {request.description}
-                </p>
-                <p className="text-sm">
-                  Distance: {request.distance?.toFixed(2)}km away
-                </p>
-                <div className="flex gap-2 mt-2">
-                  {request.status === "INPROGRESS" && (
-                    <Button onClick={() => handleCompleteRequest(request.id)}>
-                      Complete Request
-                    </Button>
-                  )}
+          {loading ? (
+            <div className="text-center">Loading requests...</div>
+          ) : filteredRequests.length === 0 ? (
+            <div className="text-center text-muted-foreground">
+              No emergency requests nearby
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredRequests.map((request) => (
+                <div
+                  key={request.id}
+                  className="p-4 space-y-2 border rounded-lg"
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold">
+                      {request.user.name} - {request.assistanceType}
+                    </h3>
+                    <Badge
+                      className={`${
+                        request.status === "COMPLETED"
+                          ? "bg-green-500"
+                          : request.status === "INPROGRESS"
+                          ? "bg-blue-500"
+                          : "bg-gray-500"
+                      }`}
+                    >
+                      {request.status}
+                    </Badge>
+                  </div>
+                  <p>
+                    Vehicle: {request.vehicle.year} {request.vehicle.brand}{" "}
+                    {request.vehicle.model}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {request.description}
+                  </p>
+                  <p className="text-sm">
+                    Distance: {request.distance?.toFixed(2)}km away
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    {request.status === "INPROGRESS" && (
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => handleCompleteRequest(request.id)}
+                      >
+                        Complete Request
+                      </Button>
+                    )}
 
-                  {request.status === "PENDING" && (
-                    <Button
-                      className="bg-green-600"
-                      onClick={() => handleAcceptRequest(request.id)}
-                    >
-                      Accept Request
-                    </Button>
-                  )}
-                  <Button variant="outline" asChild>
-                    <Link
-                      to={`/service-provider/chat?userId=${request.userId}`}
-                    >
-                      Chat with User
-                    </Link>
-                  </Button>
+                    {request.status === "PENDING" && (
+                      <Button onClick={() => handleAcceptRequest(request.id)}>
+                        Accept Request
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {filteredRequests.length === 0 && (
-              <p className="text-center text-muted-foreground">
-                No emergency requests found
-              </p>
-            )}
-          </div>
+              ))}
+              {filteredRequests.length === 0 && (
+                <p className="text-center text-muted-foreground">
+                  No emergency requests found
+                </p>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
