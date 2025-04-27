@@ -19,7 +19,18 @@ interface ChatUser {
 
 const Chat = () => {
   const [searchParams] = useSearchParams();
-  const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<ChatUser | null>(() => {
+    const userId = searchParams.get("userId");
+    if (userId) {
+      return {
+        id: userId,
+        name: searchParams.get("userName") || "User",
+        profileImage: searchParams.get("userImage") || undefined,
+        role: searchParams.get("type") || "USER",
+      };
+    }
+    return null;
+  });
 
   const initialTab = searchParams.get("type") || "vendors";
 
