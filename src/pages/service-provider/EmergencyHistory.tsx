@@ -9,9 +9,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
-import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import MapTilerMap from "../../components/map/MapTilerMap";
 
@@ -106,9 +104,13 @@ const ServiceEmergencyHistory = () => {
                     {request.assistanceType}
                   </h3>
                   <Badge
-                    variant={
-                      request.status === "COMPLETED" ? "default" : "outline"
-                    }
+                    className={`${
+                      request.status === "COMPLETED"
+                        ? "bg-green-500"
+                        : request.status === "INPROGRESS"
+                        ? "bg-blue-500"
+                        : "bg-gray-500"
+                    }`}
                   >
                     {request.status}
                   </Badge>
@@ -125,27 +127,18 @@ const ServiceEmergencyHistory = () => {
 
                 <Separator className="my-4" />
 
-                <div className="text-sm">
-                  <p>
-                    <strong>Customer:</strong> {request.user.name}
-                  </p>
-                  <p>
-                    <strong>Contact:</strong> {request.user.phone}
-                  </p>
-                </div>
-
                 <div className="flex items-center justify-between mt-4">
+                  <div className="text-sm">
+                    <p>
+                      <strong>Customer:</strong> {request.user.name}
+                    </p>
+                    <p>
+                      <strong>Contact:</strong> {request.user.phone}
+                    </p>
+                  </div>
                   <span className="text-sm text-muted-foreground">
                     {new Date(request.createdAt).toLocaleString()}
                   </span>
-
-                  <Button variant="outline" asChild>
-                    <Link
-                      to={`/service-provider/chat?userId=${request.userId}`}
-                    >
-                      Chat History
-                    </Link>
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -156,7 +149,7 @@ const ServiceEmergencyHistory = () => {
           <CardHeader>
             <CardTitle>Location History</CardTitle>
           </CardHeader>
-          <CardContent className="h-[calc(100%-5rem)]">
+          <CardContent className="h-[calc(100%-5rem)] text-gray-800">
             {selectedRequest ? (
               <MapTilerMap
                 center={{
