@@ -37,60 +37,95 @@ const MapTilerMap = ({
 
     maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
+    const initialCenter = center ? [center.longitude, center.latitude] : [0, 0];
+
     map.current = new maptilersdk.Map({
       container: mapContainer.current,
-      style: maptilersdk.MapStyle.STREETS,
-      center: [center?.longitude || 0, center?.latitude || 0],
+      style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${
+        import.meta.env.VITE_MAPTILER_API_KEY
+      }`,
+      center: initialCenter as [number, number],
       zoom: 13,
     });
 
-    // Add navigation controls
-    map.current.addControl(new maptilersdk.NavigationControl());
+    map.current.on("load", () => {
+      map.current?.addControl(new maptilersdk.NavigationControl());
 
-    // Get user's location if needed
-    if (showCurrentLocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-          setCurrentLocation(location);
-          if (onLocationUpdate) {
-            onLocationUpdate(location);
-          }
+      if (showCurrentLocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+            setCurrentLocation(location);
+            if (onLocationUpdate) {
+              onLocationUpdate(location);
+            }
 
-          // Add user marker
-          new maptilersdk.Marker({ color: "#FF0000" })
-            .setLngLat([location.longitude, location.latitude])
-            .setPopup(new maptilersdk.Popup().setHTML("You are here"))
-            .addTo(map.current!);
+            // Add user marker
+            const userMarker = new maptilersdk.Marker({
+              color: "#FF0000",
+              scale: 0.8,
+            })
+              .setLngLat([location.longitude, location.latitude])
+              .addTo(map.current!);
 
-          // Center map on user's location
-          map.current?.flyTo({
-            center: [location.longitude, location.latitude],
-          });
+            const popup = new maptilersdk.Popup({
+              closeButton: false,
+              closeOnClick: false,
+              offset: [0, -30],
+            }).setHTML(
+              '<div class="p-2 text-sm font-medium">You are here</div>'
+            );
 
-          // If showing directions, add route
-          if (showDirections && destination) {
-            addRoute(location, destination);
-          }
-        },
-        (error) => console.error("Error getting location:", error),
-        { enableHighAccuracy: true }
-      );
-    }
+            userMarker.setPopup(popup);
+            popup.addTo(map.current!);
 
-    // Add markers
-    markers.forEach((marker) => {
-      new maptilersdk.Marker()
-        .setLngLat([marker.position.longitude, marker.position.latitude])
-        .setPopup(
-          new maptilersdk.Popup().setHTML(
-            `<h3>${marker.title}</h3>${marker.description || ""}`
-          )
-        )
-        .addTo(map.current!);
+            map.current?.flyTo({
+              center: [location.longitude, location.latitude],
+              zoom: 14,
+              essential: true,
+            });
+
+            if (showDirections && destination) {
+              addRoute(location, destination);
+            }
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+
+      // Add markers
+      markers.forEach((marker) => {
+        const markerElement = new maptilersdk.Marker({
+          color: "#3b82f6",
+          scale: 0.8,
+        })
+          .setLngLat([marker.position.longitude, marker.position.latitude])
+          .addTo(map.current!);
+
+        if (marker.title || marker.description) {
+          const popup = new maptilersdk.Popup({
+            closeButton: true,
+            offset: [0, -30],
+          }).setHTML(
+            `<div class="p-2">
+              <h3 class="font-bold text-sm">${marker.title}</h3>
+              ${
+                marker.description
+                  ? `<p class="text-sm mt-1">${marker.description}</p>`
+                  : ""
+              }
+            </div>`
+          );
+
+          markerElement.setPopup(popup);
+        }
+      });
     });
 
     return () => {
@@ -98,7 +133,6 @@ const MapTilerMap = ({
     };
   }, [center, markers, showDirections, destination, showCurrentLocation]);
 
-  // Watch position for live tracking
   useEffect(() => {
     if (!onLocationUpdate || !showCurrentLocation) return;
 
@@ -111,13 +145,12 @@ const MapTilerMap = ({
         setCurrentLocation(location);
         onLocationUpdate(location);
 
-        // Update user marker position
         if (map.current) {
           map.current.setCenter([location.longitude, location.latitude]);
         }
       },
       (error) => console.error("Error watching position:", error),
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 10000 }
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
@@ -140,7 +173,6 @@ const MapTilerMap = ({
         const route = data.routes[0];
         const coordinates = route.geometry.coordinates;
 
-        // Add route layer
         if (map.current.getSource("route")) {
           (map.current.getSource("route") as any).setData({
             type: "Feature",
@@ -174,11 +206,11 @@ const MapTilerMap = ({
             paint: {
               "line-color": "#3b82f6",
               "line-width": 4,
+              "line-opacity": 0.8,
             },
           });
         }
 
-        // Fit map to show entire route
         const bounds = new maptilersdk.LngLatBounds();
         coordinates.forEach((coord: number[]) => {
           bounds.extend(coord as [number, number]);
