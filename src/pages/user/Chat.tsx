@@ -24,7 +24,7 @@ const Chat = () => {
     if (userId) {
       return {
         id: userId,
-        name: searchParams.get("userName") || "User",
+        name: searchParams.get("userName") || "USER",
         profileImage: searchParams.get("userImage") || undefined,
         role: searchParams.get("type") || "USER",
       };

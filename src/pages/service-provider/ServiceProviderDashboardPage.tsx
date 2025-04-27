@@ -11,7 +11,7 @@ import { Badge } from "../../components/ui/badge";
 import { toast } from "sonner";
 import axios from "axios";
 import ServiceProviderMap from "../../components/map/ServiceProviderMap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface EmergencyRequest {
   id: string;
@@ -41,6 +41,8 @@ const ServiceProviderDashboardPage = () => {
     EmergencyRequest[]
   >([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
@@ -104,7 +106,7 @@ const ServiceProviderDashboardPage = () => {
         <CardHeader>
           <CardTitle>Your Location</CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px]">
+        <CardContent className="h-[400px] text-gray-800">
           <ServiceProviderMap />
         </CardContent>
       </Card>
@@ -122,7 +124,7 @@ const ServiceProviderDashboardPage = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {emergencyRequests.map((request) => (
+              {emergencyRequests.slice(0, 2).map((request) => (
                 <div
                   key={request.id}
                   className="p-4 space-y-2 border rounded-lg"
@@ -159,6 +161,17 @@ const ServiceProviderDashboardPage = () => {
                   </div>
                 </div>
               ))}
+
+              {emergencyRequests.length > 3 && (
+                <div className="flex justify-center">
+                  <Button
+                    variant="secondary"
+                    onClick={() => navigate("/service-provider/emergency")}
+                  >
+                    View More Requests
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

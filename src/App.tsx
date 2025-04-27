@@ -39,6 +39,7 @@ import VehicleManagement from "./pages/service-provider/VehicleManagement";
 import ServiceProviderChat from "./pages/service-provider/ServiceProvicerChat";
 import EmergencyHistory from "./pages/user/EmergencyHistory";
 import ServiceEmergencyHistory from "./pages/service-provider/EmergencyHistory";
+import EmergencyRequests from "./pages/service-provider/EmergencyRequests";
 
 const App = () => {
   const location = useLocation();
@@ -168,6 +169,7 @@ const App = () => {
           <Route path="dashboard" element={<ServiceProviderDashboardPage />} />
           <Route path="vehicles" element={<VehicleManagement />} />
           <Route path="chat" element={<ServiceProviderChat />} />
+          <Route path="emergency" element={<EmergencyRequests />} />
           <Route
             path="emergencyHistory"
             element={<ServiceEmergencyHistory />}

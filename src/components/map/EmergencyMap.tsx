@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import MapTilerMap from "./MapTilerMap";
+import LocationMap from "./LocationMap";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { io } from "socket.io-client";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Location {
   latitude: number;
@@ -27,6 +28,7 @@ const EmergencyMap = () => {
   const [providers, setProviders] = useState<ServiceProvider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token || !userData) return;
@@ -108,8 +110,23 @@ const EmergencyMap = () => {
 
       if (response.data.success) {
         toast.success("Emergency assistance requested");
-        // Redirect to chat with the provider
-        window.location.href = `/user/dashboard/chat?type=service-providers&userId=${selectedProvider}`;
+
+        // Create initial chat message
+        const chatResponse = await axios.post(
+          `${backendUrl}/api/chat/send`,
+          {
+            receiverId: selectedProvider,
+            message: "Emergency assistance needed at my location",
+          },
+          { headers: { Authorization: token } }
+        );
+
+        if (chatResponse.data.success) {
+          // Navigate to chat with the selected provider
+          navigate(
+            `/user/dashboard/chat?type=service-providers&userId=${selectedProvider}`
+          );
+        }
       }
     } catch (error) {
       console.log(error);
@@ -132,23 +149,27 @@ const EmergencyMap = () => {
   return (
     <div className="space-y-4">
       <Card className="p-4">
-        <MapTilerMap
-          center={currentLocation}
-          markers={[
-            {
-              position: currentLocation,
-              title: "Your Location",
-              description: "You are here",
-            },
-            ...providers.map((provider) => ({
-              position: provider.location,
-              title: provider.name,
-              description: `${provider.distance.toFixed(2)}km away${
-                provider.isAvailable ? " - Available" : ""
-              }`,
-            })),
-          ]}
-        />
+        <div className="h-[400px]">
+          <LocationMap
+            center={currentLocation}
+            markers={[
+              {
+                position: currentLocation,
+                title: "Your Location",
+                description: "You are here",
+              },
+              ...providers.map((provider) => ({
+                position: provider.location,
+                title: provider.name,
+                description: `${provider.distance.toFixed(2)}km away${
+                  provider.isAvailable ? " - Available" : ""
+                }`,
+              })),
+            ]}
+            showCurrentLocation={true}
+            zoom={13}
+          />
+        </div>
       </Card>
 
       <Card className="p-4">

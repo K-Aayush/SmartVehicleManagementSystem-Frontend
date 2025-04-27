@@ -22,18 +22,21 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
+// Types
 interface Location {
   latitude: number;
   longitude: number;
 }
 
+interface MarkerData {
+  position: Location;
+  title: string;
+  description?: string;
+}
+
 interface LocationMapProps {
   center?: Location;
-  markers?: Array<{
-    position: Location;
-    title: string;
-    description?: string;
-  }>;
+  markers?: MarkerData[];
   onLocationUpdate?: (location: Location) => void;
   showCurrentLocation?: boolean;
   zoom?: number;
@@ -43,9 +46,13 @@ interface LocationMapProps {
 // Component to handle map center updates
 const MapUpdater = ({ center }: { center: Location }) => {
   const map = useMap();
+
   useEffect(() => {
-    map.setView([center.latitude, center.longitude]);
+    if (center) {
+      map.setView([center.latitude, center.longitude]);
+    }
   }, [center, map]);
+
   return null;
 };
 
@@ -60,7 +67,7 @@ const LocationMap = ({
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
 
   useEffect(() => {
-    if (showCurrentLocation) {
+    if (showCurrentLocation && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const location = {
@@ -79,13 +86,22 @@ const LocationMap = ({
     }
   }, [showCurrentLocation, onLocationUpdate]);
 
+  // Safely get valid markers
+  const validMarkers = markers.filter(
+    (marker) =>
+      marker &&
+      marker.position &&
+      marker.position.latitude != null &&
+      marker.position.longitude != null
+  );
+
   // Create route lines between current location and markers
   const getRouteLines = () => {
     if (!currentLocation || !showRoute) return null;
 
-    return markers.map((marker, index) => (
+    return validMarkers.map((marker, index) => (
       <Polyline
-        key={index}
+        key={`route-line-${index}`}
         positions={[
           [currentLocation.latitude, currentLocation.longitude],
           [marker.position.latitude, marker.position.longitude],
@@ -117,10 +133,13 @@ const LocationMap = ({
         </Marker>
       )}
 
-      {markers.map((marker, index) => (
+      {validMarkers.map((marker, index) => (
         <Marker
-          key={index}
-          position={[marker.position.latitude, marker.position.longitude]}
+          key={`marker-${index}`}
+          position={[
+            parseFloat(marker.position.latitude.toString()),
+            parseFloat(marker.position.longitude.toString()),
+          ]}
         >
           <Popup>
             <div>

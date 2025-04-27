@@ -88,6 +88,15 @@ export default function ProfileHudTop() {
                 </Link>
               )}
 
+              {userData?.role === "SERVICE_PROVIDER" && (
+                <Link to={"/service-provider/dashboard"}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <LayoutDashboard className="mr-2 size-4" />
+                    Dashboard
+                  </DropdownMenuItem>
+                </Link>
+              )}
+
               <Link to={"/Profile"}>
                 <DropdownMenuItem className="cursor-pointer">
                   <Settings className="mr-2 size-4" />

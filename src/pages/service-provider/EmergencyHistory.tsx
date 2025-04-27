@@ -42,6 +42,10 @@ const ServiceEmergencyHistory = () => {
   const [selectedRequest, setSelectedRequest] =
     useState<EmergencyRequest | null>(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const requestsPerPage = 3;
+
   useEffect(() => {
     fetchEmergencyHistory();
   }, []);
@@ -66,6 +70,14 @@ const ServiceEmergencyHistory = () => {
     }
   };
 
+  // Pagination Logic
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = requests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -80,7 +92,7 @@ const ServiceEmergencyHistory = () => {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
-          {requests.map((request) => (
+          {currentRequests.map((request) => (
             <Card
               key={request.id}
               className={`cursor-pointer transition-colors ${
@@ -174,6 +186,29 @@ const ServiceEmergencyHistory = () => {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-4">
+        <button
+          className="px-4 py-2 text-white rounded bg-primary"
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
+        <span className="mx-2">
+          Page {currentPage} of {Math.ceil(requests.length / requestsPerPage)}
+        </span>
+        <button
+          className="px-4 py-2 text-white rounded bg-primary"
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={
+            currentPage === Math.ceil(requests.length / requestsPerPage)
+          }
+        >
+          Next
+        </button>
       </div>
     </div>
   );
