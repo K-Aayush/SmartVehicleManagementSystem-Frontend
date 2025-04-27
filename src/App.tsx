@@ -37,6 +37,8 @@ import ManageProducts from "./pages/vendor/ManageProducts";
 import VendorChat from "./pages/vendor/VendorChat";
 import VehicleManagement from "./pages/service-provider/VehicleManagement";
 import ServiceProviderChat from "./pages/service-provider/ServiceProvicerChat";
+import EmergencyHistory from "./pages/user/EmergencyHistory";
+import ServiceEmergencyHistory from "./pages/service-provider/EmergencyHistory";
 
 const App = () => {
   const location = useLocation();
@@ -138,6 +140,7 @@ const App = () => {
           <Route path="orders" element={<UserOrders />} />
           <Route path="chat" element={<Chat />} />
           <Route path="emergency" element={<EmergencyService />} />
+          <Route path="emergencyHistory" element={<EmergencyHistory />} />
         </Route>
 
         <Route
@@ -165,6 +168,10 @@ const App = () => {
           <Route path="dashboard" element={<ServiceProviderDashboardPage />} />
           <Route path="vehicles" element={<VehicleManagement />} />
           <Route path="chat" element={<ServiceProviderChat />} />
+          <Route
+            path="emergencyHistory"
+            element={<ServiceEmergencyHistory />}
+          />
         </Route>
 
         <Route
