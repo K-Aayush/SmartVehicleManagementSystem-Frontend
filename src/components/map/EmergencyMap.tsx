@@ -148,8 +148,6 @@ const EmergencyMap = () => {
               }`,
             })),
           ]}
-          showCurrentLocation={true}
-          onLocationUpdate={(location) => setCurrentLocation(location)}
         />
       </Card>
 

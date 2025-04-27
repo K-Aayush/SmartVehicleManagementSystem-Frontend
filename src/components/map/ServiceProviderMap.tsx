@@ -141,8 +141,6 @@ const ServiceProviderMap = () => {
           } - ${request.distance?.toFixed(2)}km away`,
         })),
       ]}
-      showCurrentLocation={true}
-      onLocationUpdate={(location) => setCurrentLocation(location)}
     />
   );
 };
