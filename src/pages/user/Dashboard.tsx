@@ -4,6 +4,7 @@ import {
   ShoppingBag,
   MessageSquare,
   AlertTriangle,
+  HistoryIcon,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -57,6 +58,17 @@ const UserDashboard = () => {
             >
               <AlertTriangle className="w-5 h-5" />
               <p>Emergency Service</p>
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-700 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
+                }`
+              }
+              to={"/user/dashboard/emergencyHistory"}
+            >
+              <HistoryIcon className="w-5 h-5" />
+              <p>Emergency History</p>
             </NavLink>
             <NavLink
               className={({ isActive }) =>

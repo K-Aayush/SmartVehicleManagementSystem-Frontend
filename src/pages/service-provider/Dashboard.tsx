@@ -1,4 +1,4 @@
-import { LayoutDashboard, Car, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Car, MessageSquare, History } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
 const ServiceProviderDashboard = () => {
@@ -40,6 +40,17 @@ const ServiceProviderDashboard = () => {
             >
               <MessageSquare />
               <p>Messages</p>
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-700 ${
+                  isActive && "bg-gray-700 border-r-4 border-primary"
+                }`
+              }
+              to={"/service-provider/emergencyHistory"}
+            >
+              <History />
+              <p>Emergency History</p>
             </NavLink>
           </ul>
         </div>
