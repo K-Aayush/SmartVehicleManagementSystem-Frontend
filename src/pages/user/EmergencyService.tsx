@@ -22,6 +22,13 @@ import {
 import { Label } from "../../components/ui/label";
 import { Textarea } from "../../components/ui/textarea";
 
+interface vehicleProps {
+  id: string;
+  model: string;
+  brand: string;
+  year: number;
+}
+
 const EmergencyService = () => {
   const { token, backendUrl } = useContext(AppContext);
   const [requesting, setRequesting] = useState(false);
@@ -29,7 +36,7 @@ const EmergencyService = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const [assistanceType, setAssistanceType] = useState("");
   const [description, setDescription] = useState("");
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState<vehicleProps[]>([]);
 
   useEffect(() => {
     fetchUserVehicles();
@@ -94,6 +101,7 @@ const EmergencyService = () => {
             `${response.data.nearbyProviders} service providers notified`
           );
         }
+        // Navigate to chat with the service provider type pre-selected
         navigate(`/user/dashboard/chat`);
       }
     } catch (error) {
