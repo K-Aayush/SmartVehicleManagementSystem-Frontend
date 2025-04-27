@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import LocationMap from "./LocationMap";
+import MapTilerMap from "./MapTilerMap";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { io } from "socket.io-client";
@@ -14,10 +14,16 @@ interface Location {
 interface EmergencyRequest {
   id: string;
   userId: string;
+  vehicleId: string;
+  assistanceType: string;
+  description: string;
+  status: string;
   latitude: number;
   longitude: number;
+  createdAt: string;
   user: {
     name: string;
+    phone: string;
   };
   vehicle: {
     brand: string;
@@ -28,7 +34,7 @@ interface EmergencyRequest {
 }
 
 const ServiceProviderMap = () => {
-  const { backendUrl, token, userData } = useContext(AppContext);
+  const { userData, token, backendUrl } = useContext(AppContext);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [emergencyRequests, setEmergencyRequests] = useState<
     EmergencyRequest[]
@@ -116,7 +122,7 @@ const ServiceProviderMap = () => {
   }
 
   return (
-    <LocationMap
+    <MapTilerMap
       center={currentLocation}
       markers={[
         {
@@ -135,7 +141,8 @@ const ServiceProviderMap = () => {
           } - ${request.distance?.toFixed(2)}km away`,
         })),
       ]}
-      showCurrentLocation
+      showCurrentLocation={true}
+      onLocationUpdate={(location) => setCurrentLocation(location)}
     />
   );
 };

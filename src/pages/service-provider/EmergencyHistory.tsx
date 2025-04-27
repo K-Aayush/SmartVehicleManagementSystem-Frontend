@@ -13,7 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import MapBox from "../../components/map/MapBox";
+import MapTilerMap from "../../components/map/MapTilerMap";
 
 interface EmergencyRequest {
   id: string;
@@ -146,7 +146,7 @@ const ServiceEmergencyHistory = () => {
           </CardHeader>
           <CardContent className="h-[calc(100%-5rem)]">
             {selectedRequest ? (
-              <MapBox
+              <MapTilerMap
                 center={{
                   latitude: selectedRequest.latitude,
                   longitude: selectedRequest.longitude,

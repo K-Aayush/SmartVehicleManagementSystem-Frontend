@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import LocationMap from "./LocationMap";
+import MapTilerMap from "./MapTilerMap";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
@@ -132,7 +132,7 @@ const EmergencyMap = () => {
   return (
     <div className="space-y-4">
       <Card className="p-4">
-        <LocationMap
+        <MapTilerMap
           center={currentLocation}
           markers={[
             {
@@ -148,7 +148,8 @@ const EmergencyMap = () => {
               }`,
             })),
           ]}
-          showCurrentLocation
+          showCurrentLocation={true}
+          onLocationUpdate={(location) => setCurrentLocation(location)}
         />
       </Card>
 
