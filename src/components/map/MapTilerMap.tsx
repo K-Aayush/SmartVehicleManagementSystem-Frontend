@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as maptilersdk from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 
@@ -8,7 +8,7 @@ interface Location {
 }
 
 interface MapTilerMapProps {
-  center?: Location;
+  center: Location;
   markers?: Array<{
     position: Location;
     title: string;
@@ -16,8 +16,6 @@ interface MapTilerMapProps {
   }>;
   showDirections?: boolean;
   destination?: Location;
-  onLocationUpdate?: (location: Location) => void;
-  showCurrentLocation?: boolean;
 }
 
 const MapTilerMap = ({
@@ -25,12 +23,9 @@ const MapTilerMap = ({
   markers = [],
   showDirections = false,
   destination,
-  onLocationUpdate,
-  showCurrentLocation = false,
 }: MapTilerMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maptilersdk.Map | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -40,88 +35,37 @@ const MapTilerMap = ({
     map.current = new maptilersdk.Map({
       container: mapContainer.current,
       style: maptilersdk.MapStyle.STREETS,
-      center: [center?.longitude || 0, center?.latitude || 0],
+      center: [center.longitude, center.latitude],
       zoom: 13,
     });
 
-    // Add navigation controls
-    map.current.addControl(new maptilersdk.NavigationControl());
+    map.current.on("load", () => {
+      // Add markers
+      markers.forEach((marker) => {
+        const markerElement = new maptilersdk.Marker()
+          .setLngLat([marker.position.longitude, marker.position.latitude])
+          .addTo(map.current!);
 
-    // Get user's location if needed
-    if (showCurrentLocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-          setCurrentLocation(location);
-          if (onLocationUpdate) {
-            onLocationUpdate(location);
-          }
+        if (marker.title || marker.description) {
+          const popup = new maptilersdk.Popup({ offset: 25 }).setHTML(
+            `<h3>${marker.title}</h3>${
+              marker.description ? `<p>${marker.description}</p>` : ""
+            }`
+          );
+          markerElement.setPopup(popup);
+        }
+      });
 
-          // Add user marker
-          new maptilersdk.Marker({ color: "#FF0000" })
-            .setLngLat([location.longitude, location.latitude])
-            .setPopup(new maptilersdk.Popup().setHTML("You are here"))
-            .addTo(map.current!);
-
-          // Center map on user's location
-          map.current?.flyTo({
-            center: [location.longitude, location.latitude],
-          });
-
-          // If showing directions, add route
-          if (showDirections && destination) {
-            addRoute(location, destination);
-          }
-        },
-        (error) => console.error("Error getting location:", error),
-        { enableHighAccuracy: true }
-      );
-    }
-
-    // Add markers
-    markers.forEach((marker) => {
-      new maptilersdk.Marker()
-        .setLngLat([marker.position.longitude, marker.position.latitude])
-        .setPopup(
-          new maptilersdk.Popup().setHTML(
-            `<h3>${marker.title}</h3>${marker.description || ""}`
-          )
-        )
-        .addTo(map.current!);
+      // Add directions if needed
+      if (showDirections && destination) {
+        addRoute(center, destination);
+      }
     });
 
     return () => {
       map.current?.remove();
     };
-  }, [center, markers, showDirections, destination, showCurrentLocation]);
-
-  // Watch position for live tracking
-  useEffect(() => {
-    if (!onLocationUpdate || !showCurrentLocation) return;
-
-    const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        const location = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setCurrentLocation(location);
-        onLocationUpdate(location);
-
-        // Update user marker position
-        if (map.current) {
-          map.current.setCenter([location.longitude, location.latitude]);
-        }
-      },
-      (error) => console.error("Error watching position:", error),
-      { enableHighAccuracy: true }
-    );
-
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, [onLocationUpdate, showCurrentLocation]);
+  }, [center, markers, showDirections, destination]);
 
   const addRoute = async (start: Location, end: Location) => {
     if (!map.current) return;
@@ -140,45 +84,33 @@ const MapTilerMap = ({
         const route = data.routes[0];
         const coordinates = route.geometry.coordinates;
 
-        // Add route layer
-        if (map.current.getSource("route")) {
-          (map.current.getSource("route") as any).setData({
+        map.current.addSource("route", {
+          type: "geojson",
+          data: {
             type: "Feature",
             properties: {},
             geometry: {
               type: "LineString",
               coordinates: coordinates,
             },
-          });
-        } else {
-          map.current.addSource("route", {
-            type: "geojson",
-            data: {
-              type: "Feature",
-              properties: {},
-              geometry: {
-                type: "LineString",
-                coordinates: coordinates,
-              },
-            },
-          });
+          },
+        });
 
-          map.current.addLayer({
-            id: "route",
-            type: "line",
-            source: "route",
-            layout: {
-              "line-join": "round",
-              "line-cap": "round",
-            },
-            paint: {
-              "line-color": "#3b82f6",
-              "line-width": 4,
-            },
-          });
-        }
+        map.current.addLayer({
+          id: "route",
+          type: "line",
+          source: "route",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#3b82f6",
+            "line-width": 4,
+          },
+        });
 
-        // Fit map to show entire route
+        // Fit the map to show the entire route
         const bounds = new maptilersdk.LngLatBounds();
         coordinates.forEach((coord: number[]) => {
           bounds.extend(coord as [number, number]);

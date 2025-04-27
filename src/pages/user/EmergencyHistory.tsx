@@ -149,6 +149,7 @@ const EmergencyHistory = () => {
           <CardContent className="h-[calc(100%-5rem)]">
             {selectedRequest ? (
               <MapTilerMap
+              
                 center={{
                   latitude: selectedRequest.latitude,
                   longitude: selectedRequest.longitude,
