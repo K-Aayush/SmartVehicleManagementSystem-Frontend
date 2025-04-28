@@ -39,6 +39,8 @@ const ServiceProviderMap = () => {
   const [emergencyRequests, setEmergencyRequests] = useState<
     EmergencyRequest[]
   >([]);
+  const [selectedRequest, setSelectedRequest] =
+    useState<EmergencyRequest | null>(null);
 
   useEffect(() => {
     if (!token || !userData) return;
@@ -127,7 +129,7 @@ const ServiceProviderMap = () => {
       markers={[
         {
           position: currentLocation,
-          title: "Your Location",
+          title: "Your Location (Service Provider)",
           description: "You are here",
         },
         ...emergencyRequests.map((request) => ({
@@ -138,9 +140,28 @@ const ServiceProviderMap = () => {
           title: `Emergency: ${request.user.name}`,
           description: `${request.vehicle.year} ${request.vehicle.brand} ${
             request.vehicle.model
-          } - ${request.distance?.toFixed(2)}km away`,
+          }\nDistance: ${request.distance?.toFixed(2)}km\nPhone: ${
+            request.user.phone
+          }`,
         })),
       ]}
+      showDirections={selectedRequest !== null}
+      destination={
+        selectedRequest
+          ? {
+              latitude: selectedRequest.latitude,
+              longitude: selectedRequest.longitude,
+            }
+          : undefined
+      }
+      onMarkerClick={(marker) => {
+        const request = emergencyRequests.find(
+          (r) =>
+            r.latitude === marker.position.latitude &&
+            r.longitude === marker.position.longitude
+        );
+        setSelectedRequest(request || null);
+      }}
     />
   );
 };
