@@ -76,7 +76,7 @@ const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
   }
 
   return (
-    <Card className="max-w-[70%]">
+    <Card>
       <CardHeader>
         <CardTitle>Conversations</CardTitle>
       </CardHeader>
