@@ -18,7 +18,7 @@ import {
 } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Loader2, Ban, Eye } from "lucide-react";
+import { Loader2, Ban, Eye, CheckCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -48,15 +48,17 @@ interface User {
   createdAt: string;
   isOnline: boolean;
   lastSeen?: string;
+  isBanned: boolean;
+  banReason?: string;
 }
 
 interface UserDetails extends User {
-  vehicles?: any[];
-  services?: any[];
-  products?: any[];
-  orders?: any[];
-  payment?: any[];
-  emergencyRequest?: any[];
+  vehicles?: unknown[];
+  services?: unknown[];
+  products?: unknown[];
+  orders?: unknown[];
+  payment?: unknown[];
+  emergencyRequest?: unknown[];
 }
 
 const ManageUsers = () => {
@@ -67,8 +69,11 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [showBanDialog, setShowBanDialog] = useState(false);
+  const [showUnbanDialog, setShowUnbanDialog] = useState(false);
   const [banReason, setBanReason] = useState("");
+  const [unbanReason, setUnbanReason] = useState("");
   const [banLoading, setBanLoading] = useState(false);
+  const [unbanLoading, setUnbanLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -88,6 +93,7 @@ const ManageUsers = () => {
 
       if (response.data.success) {
         setUsers(response.data.users);
+        console.log(response.data.users);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -108,6 +114,7 @@ const ManageUsers = () => {
 
       if (response.data.success) {
         setSelectedUser(response.data.user);
+
         setShowUserDetails(true);
       }
     } catch (error) {
@@ -131,16 +138,44 @@ const ManageUsers = () => {
 
       if (response.data.success) {
         toast.success("User banned successfully");
-        setUsers((prev) => prev.filter((user) => user.id !== selectedUser.id));
         setShowBanDialog(false);
         setBanReason("");
         setSelectedUser(null);
+        await fetchUsers();
       }
     } catch (error: any) {
       console.error("Error banning user:", error);
       toast.error(error.response?.data?.message || "Failed to ban user");
     } finally {
       setBanLoading(false);
+    }
+  };
+
+  const handleUnbanUser = async () => {
+    if (!selectedUser || !unbanReason) return;
+
+    try {
+      setUnbanLoading(true);
+      const response = await axios.delete(
+        `${backendUrl}/api/admin/users/${selectedUser.id}/unban`,
+        {
+          headers: { Authorization: token },
+          data: { reason: unbanReason },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("User unbanned successfully");
+        setShowUnbanDialog(false);
+        setUnbanReason("");
+        setSelectedUser(null);
+        await fetchUsers();
+      }
+    } catch (error: any) {
+      console.error("Error unbanning user:", error);
+      toast.error(error.response?.data?.message || "Failed to unban user");
+    } finally {
+      setUnbanLoading(false);
     }
   };
 
@@ -165,7 +200,9 @@ const ManageUsers = () => {
               <SelectItem value="ALL">All Users</SelectItem>
               <SelectItem value="USER">Customers</SelectItem>
               <SelectItem value="VENDOR">Vendors</SelectItem>
-              <SelectItem value="SERVICE_PROVIDER">Service Providers</SelectItem>
+              <SelectItem value="SERVICE_PROVIDER">
+                Service Providers
+              </SelectItem>
             </SelectContent>
           </Select>
         </CardHeader>
@@ -189,11 +226,14 @@ const ManageUsers = () => {
                     <Badge variant="outline">{user.role}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={user.isOnline ? "default" : "secondary"}
-                    >
-                      {user.isOnline ? "Online" : "Offline"}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={user.isOnline ? "default" : "secondary"}>
+                        {user.isOnline ? "Online" : "Offline"}
+                      </Badge>
+                      {user.isBanned && (
+                        <Badge variant="destructive">Banned</Badge>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
@@ -204,16 +244,29 @@ const ManageUsers = () => {
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setShowBanDialog(true);
-                        }}
-                      >
-                        <Ban className="w-4 h-4" />
-                      </Button>
+                      {user.isBanned ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setShowUnbanDialog(true);
+                          }}
+                        >
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedUser(user);
+                            setShowBanDialog(true);
+                          }}
+                        >
+                          <Ban className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -260,6 +313,14 @@ const ManageUsers = () => {
                     {new Date(selectedUser.createdAt).toLocaleDateString()}
                   </p>
                 </div>
+                {selectedUser.isBanned && (
+                  <div>
+                    <Label>Ban Reason</Label>
+                    <p className="mt-1 text-red-500">
+                      {selectedUser.banReason}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Activity Summary */}
@@ -276,7 +337,9 @@ const ManageUsers = () => {
                       </div>
                       <div>
                         <Label>Total Orders</Label>
-                        <p className="mt-1">{selectedUser.orders?.length || 0}</p>
+                        <p className="mt-1">
+                          {selectedUser.orders?.length || 0}
+                        </p>
                       </div>
                     </>
                   )}
@@ -300,7 +363,9 @@ const ManageUsers = () => {
                     <>
                       <div>
                         <Label>Total Orders</Label>
-                        <p className="mt-1">{selectedUser.orders?.length || 0}</p>
+                        <p className="mt-1">
+                          {selectedUser.orders?.length || 0}
+                        </p>
                       </div>
                       <div>
                         <Label>Vehicles Registered</Label>
@@ -323,7 +388,7 @@ const ManageUsers = () => {
           <DialogHeader>
             <DialogTitle>Ban User</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. The user will be permanently removed
+              This action cannot be undone. The user will be permanently banned
               from the platform.
             </DialogDescription>
           </DialogHeader>
@@ -355,6 +420,48 @@ const ManageUsers = () => {
               disabled={!banReason || banLoading}
             >
               {banLoading ? "Banning..." : "Ban User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unban User Dialog */}
+      <Dialog open={showUnbanDialog} onOpenChange={setShowUnbanDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unban User</DialogTitle>
+            <DialogDescription>
+              This will restore the user's access to the platform.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="unbanReason">Reason for unban</Label>
+              <Input
+                id="unbanReason"
+                value={unbanReason}
+                onChange={(e) => setUnbanReason(e.target.value)}
+                placeholder="Enter reason for unbanning user"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowUnbanDialog(false);
+                setUnbanReason("");
+              }}
+              disabled={unbanLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              onClick={handleUnbanUser}
+              disabled={!unbanReason || unbanLoading}
+            >
+              {unbanLoading ? "Unbanning..." : "Unban User"}
             </Button>
           </DialogFooter>
         </DialogContent>

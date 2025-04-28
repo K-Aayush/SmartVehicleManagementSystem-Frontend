@@ -56,20 +56,6 @@ export interface vendorProductResponse {
   images: string[];
 }
 
-export interface TotalUsersState {
-  TOTAL: number;
-  USER: number;
-  VENDOR: number;
-  SERVICE_PROVIDER: number;
-}
-
-export interface AllUsersState {
-  TOTAL: userDataProps[];
-  USER: userDataProps[];
-  VENDOR: userDataProps[];
-  SERVICE_PROVIDER: userDataProps[];
-}
-
 // Define types
 interface ProductImage {
   id: string;
