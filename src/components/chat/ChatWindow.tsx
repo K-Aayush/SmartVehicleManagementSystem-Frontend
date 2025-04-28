@@ -154,7 +154,7 @@ const ChatWindow = ({
   }
 
   return (
-    <div className="flex flex-col h-[600px] border rounded-lg">
+    <div className="flex flex-col h-[calc(100vh-12rem)] border rounded-lg">
       <div className="flex items-center gap-3 p-4 border-b">
         <Avatar>
           <AvatarImage src={receiverImage} />
@@ -186,7 +186,7 @@ const ChatWindow = ({
                     : "bg-muted"
                 }`}
               >
-                <p>{message.message}</p>
+                <p className="break-words">{message.message}</p>
                 <p className="text-xs opacity-70">
                   {new Date(message.createdAt).toLocaleTimeString()}
                 </p>

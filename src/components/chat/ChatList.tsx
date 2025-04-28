@@ -85,7 +85,7 @@ const ChatList = ({ role, onSelectUser, selectedUserId }: ChatListProps) => {
           {users.map((user) => (
             <div key={user.id}>
               <button
-                className={`w-full p-3 text-left transition-colors rounded-lg hover:bg-muted ${
+                className={`max-w-[70%] p-3 text-left transition-colors rounded-lg hover:bg-muted ${
                   selectedUserId === user.id ? "bg-muted" : ""
                 }`}
                 onClick={() => onSelectUser(user)}
