@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { FaMarker } from "react-icons/fa";
 
 import { NavLink, Outlet } from "react-router-dom";
@@ -31,17 +31,6 @@ const AdminDashboard = () => {
             >
               <FaMarker />
               <p>Manage Users</p>
-            </NavLink>
-            <NavLink
-              className={({ isActive }) =>
-                `flex items-center p-3 sm:px-6 gap-2 w-full hover:bg-gray-800 ${
-                  isActive && "bg-gray-700 border-r-4 border-primary"
-                }`
-              }
-              to={"/admin/manage-service"}
-            >
-              <Home />
-              <p>Manage Services</p>
             </NavLink>
           </ul>
         </div>

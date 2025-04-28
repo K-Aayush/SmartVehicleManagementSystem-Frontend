@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
 import {
-  AllUsersState,
   authResponse,
   Product,
   tokenCheck,
@@ -11,12 +10,9 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { registerFormData } from "../lib/validator";
-import { jwtDecode } from "jwt-decode";
 
-interface DecodedToken {
-  id: string;
-  role: string;
-}
+
+
 
 export const AppContextProvider = ({
   children,
@@ -37,57 +33,6 @@ export const AppContextProvider = ({
   );
   const [userData, setUserData] = useState<userDataProps | null>(null);
 
-  const decoded = token ? jwtDecode<DecodedToken>(token) : null;
-
-  //get all users states
-  const [allUsers, setAllUsers] = useState<AllUsersState>({
-    TOTAL: [],
-    USER: [],
-    VENDOR: [],
-    SERVICE_PROVIDER: [],
-  });
-
-  //fetching all users
-  const fetchAllUsers = async (role = "") => {
-    setIsLoading(true);
-    setError("");
-    try {
-      const { data } = await axios.get(`${backendUrl}/api/admin/getAllUsers`, {
-        params: { role },
-        headers: {
-          Authorization: token,
-        },
-      });
-      if (data.success) {
-        setAllUsers((prev) => ({
-          ...prev,
-          [role || "TOTAL"]: data.users,
-        }));
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      //Axios error
-      if (error instanceof AxiosError && error.response) {
-        setError(error.response.data.message);
-      } else if (error instanceof Error) {
-        setError(error.message || "An error occoured while fetching data");
-      } else {
-        setError("Internal Server Error");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (decoded?.role === "ADMIN") {
-      fetchAllUsers("");
-      fetchAllUsers("USER");
-      fetchAllUsers("VENDOR");
-      fetchAllUsers("SERVICE_PROVIDER");
-    }
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -204,8 +149,6 @@ export const AppContextProvider = ({
     logout,
     error,
     setError,
-    allUsers,
-    setAllUsers,
     products,
     setProducts,
   };
